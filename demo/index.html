@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html data-theme="light" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Form Demo</title>
+    <style>
+        /* Styling the page in general */
+        * {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            background-color: #fff;
+            color: #000;
+            height: 100%;
+        }
+
+        html[data-theme=dark] {
+            background-color: #000;
+            color: #fff;
+        }
+
+        body {
+            height: calc(100% - 57px);
+            overflow: hidden;
+        }
+
+        .header {
+            align-content: center;
+            align-items: center;
+            border-bottom: 1px solid grey;
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+        }
+
+        #button-switch-theme {
+            padding: 5px;
+        }
+
+        .wrapper {
+            box-sizing: border-box;
+            display: flex;
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            border-right: 1px solid grey;
+            min-width: 200px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .sidebar p {
+            font-size: 18px;
+        }
+
+        .sidebar__list {
+            list-style: none;
+            padding: 5px 5px 5px 5px;
+        }
+
+        .sidebar__list li:hover {
+            background-color: #eeeeee;
+        }
+
+        html[data-theme=dark] .sidebar__list li:hover {
+            background-color: #2a2a2a;
+        }
+
+        .sidebar__list a {
+            color: #585858;
+            display: inline-block;
+            padding: 5px;
+            width: 100%;
+        }
+
+        html[data-theme=dark] .sidebar__list a {
+            color: #969696;
+        }
+
+        .content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        hr {
+            margin: 25px 0;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        p {
+            margin: 10px 0;
+        }
+
+        ul.list {
+            list-style: inside;
+        }
+
+        ul.list li {
+            padding-left: 15px;
+        }
+
+        form {
+            margin: 20px;
+        }
+
+        .live-html {
+            font-weight: 700;
+        }
+
+        .html-code {
+            background-color: #eeeeee;
+            box-sizing: border-box;
+            height: 100%;
+            margin: 5px 0 0 0;
+            overflow: auto;
+            padding: 5px;
+            white-space: pre;
+            width: 100%;
+        }
+
+        html[data-theme=dark] .html-code{
+            background-color: #2a2a2a;
+        }
+    </style>
+    <style>
+        /* CSS for styling the form */
+        .__label__ {
+            cursor: pointer;
+            display: inline-block;
+            font-size: 15px;
+            font-weight: 700;
+            margin: 0 0 13px;
+        }
+
+        .__input__ {
+            background-color: #fff;
+            border: 1px solid #dcdcdc;
+            border-radius: 3px;
+            box-shadow: 0 1px 5px 0 rgb(0 0 0 / 10%);
+            box-sizing: border-box;
+            color: #4a4a4a;
+            display: block;
+            font-family: inherit;
+            font-size: inherit;
+            height: 46px;
+            line-height: inherit;
+            padding: 0 10px;
+            width: 100%;
+        }
+
+        .__button__{
+            background: linear-gradient(#1eaaff,#0d71ff);
+            border: 0;
+            border-radius: 16px;
+            box-shadow: 0 3px 5px 0 rgb(0 0 0 / 20%);
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 46px;
+            margin: 0 0 10px;
+            min-width: 160px;
+            padding: 0 23px;
+            transition: background .2s ease;
+            width: auto;
+        }
+
+        .__input__[type=checkbox] {
+            display: inline;
+            vertical-align: middle;
+            width: 46px;
+            margin: 10px 0;
+        }
+
+        .__input__.__invisible__ {
+            border: none;
+            box-shadow: none;
+            display: block;
+            height: 100%;
+        }
+
+        .__block__element__ {
+            margin-bottom: 25px;
+        }
+
+        .__fieldset__ {
+            border: 1px solid #dcdcdc;
+            border-radius: 3px;
+            box-shadow: 0 1px 5px 0 rgb(0 0 0 / 10%);
+            box-sizing: border-box;
+            padding: 10px;
+            margin-bottom: 25px;
+            width: 100%;
+        }
+
+        .__fieldset__.__relative__ {
+            position: relative;
+        }
+
+        .__legend__ {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            margin-right: 42px;
+            word-break: break-all;
+        }
+
+        .__feedback__fieldset__ {
+            position: absolute;
+            right: 2px;
+            top: -5px;
+        }
+    </style>
+    <style>
+        /* Example of css using class from the form.js */
+        .form__container {
+            align-items: center;
+            background-color: #fff;
+            border: 1px solid #dcdcdc;
+            border-radius: 3px;
+            box-shadow: 0 1px 5px 0 rgb(0 0 0 / 10%);
+            box-sizing: border-box;
+            color: #4a4a4a;
+            display: flex;
+            font-family: inherit;
+            font-size: inherit;
+            height: 46px;
+            line-height: inherit;
+            padding: 0;
+            width: 100%;
+        }
+
+        .form__feedback--fieldset {
+            position: relative;
+        }
+
+        .form__feedback.__relative__ {
+            position: relative;
+        }
+
+        .form__feedback--error:after {
+            content: url("data:image/svg+xml;charset=utf-8,%3Csvg fill='%23EA253D' width='24' height='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm-1 5h2v10h-2V5zm1 14.25a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5z'/%3E%3C/svg%3E");
+            display: block;
+            height: 24px;
+            padding: 0 8px;
+            width: 24px;
+        }
+        .form__feedback--success:after {
+            content: url("data:image/svg+xml;charset=utf-8,%3Csvg fill='%2350E3C2' width='24' height='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm-1.25 17.292l-4.5-4.364 1.857-1.858 2.643 2.506 5.643-5.784 1.857 1.857-7.5 7.643z'/%3E%3C/svg%3E");
+            display: block;
+            height: 24px;
+            padding: 0 8px;
+            width: 24px;
+        }
+        .form__feedback--loading:after {
+            animation: animation__rotating 2s linear infinite;
+            animation-direction: reverse;
+            content: url("data:image/svg+xml;charset=utf-8,%3Csvg fill='%231eaaff' width='24' height='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5 20l-1.359-2.038A6.923 6.923 0 0 1 12 19c-3.859 0-7-3.14-7-7h2c0 2.757 2.243 5 5 5 .927 0 1.786-.264 2.527-.708L13 14h5.719L17 20zm0-8c0-2.757-2.243-5-5-5-.927 0-1.786.264-2.527.708L11 10H5.281L7 4l1.359 2.038A6.923 6.923 0 0 1 12 5c3.859 0 7 3.14 7 7h-2z'/%3E%3C/svg%3E");
+            display: block;
+            height: 24px;
+            padding: 0 8px;
+            width: 24px;
+        }
+
+        .form__label--error {
+            color: #ea253d;
+            display: block;
+            margin: 4px 0;
+        }
+
+        .form__container--error {
+            border-color: #ea253d;
+        }
+        .form__container--success {
+            border-color: #50e3c2;
+        }
+
+        .form__input--error {
+            border-color: #ea253d;
+        }
+        .form__input--success {
+            border-color: #50e3c2;
+        }
+
+        .form__fieldset--error {
+            border-color: #ea253d;
+        }
+        .form__fieldset--success {
+            border-color: #50e3c2;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Form Demo</h1>
+        <button id="button-switch-theme" onclick="switchTheme();">Switch to Dark Theme</button>
+    </div>
+    <div class="wrapper">
+        <div class="sidebar">
+            <p>Form examples</p>
+            <ul class="sidebar__list">
+                <li><a href="#form-minimal-stuff-required">Minimal Stuff Required</a></li>
+                <li><a href="#form-register-example">Register Form</a></li>
+                <li><a href="#form-confirm-example">Confirm Form</a></li>
+                <li><a href="#form-fieldset-example">Fieldset example</a></li>
+            </ul>
+
+            <p>Rules examples</p>
+            <ul class="sidebar__list">
+                <li><a href="#form-rule_aria_invalid">Rule Aria Invalid</a></li>
+                <li><a href="#form-rule_callback">Rule Callback</a></li>
+                <li><a href="#form-rule_checked">Rule Checked</a></li>
+                <li><a href="#form-rule_email">Rule Email</a></li>
+                <li><a href="#form-rule_equal_field">Rule Equal Field</a></li>
+                <li><a href="#form-rule_max">Rule Max</a></li>
+                <li><a href="#form-rule_min">Rule Min</a></li>
+                <li><a href="#form-rule_regex">Rule Regex</a></li>
+                <li><a href="#form-rule_required">Rule Required</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <div id="form-minimal-stuff-required" class="example">
+                <h2>Minimal Stuff Required</h2>
+
+                <p>
+                    You must have label for your input and id attribute in input, textarea.<br />
+                    Then you can define data-form-rules for the validation.
+                </p>
+
+                <form action="#form-minimal" method="post" data-live-html="live-html-form-minimal">
+                    <div class="__block__element__">
+                        <label for="username" id="label-username" class="__label__">Username</label>
+                        <input type="text" id="username"
+                               data-form-rules="required"
+                               data-form-error-required="username is required"
+                               class="__input__"
+                        />
+                    </div>
+                    <div class="__block__element__">
+                        <label for="password" id="label-password" class="__label__">Password</label>
+                        <input type="password" id="password"
+                               data-form-rules="required"
+                               data-form-error-required="password is required"
+                               class="__input__"
+                        />
+                    </div>
+                    <input type="submit" value="Log in" class="__button__">
+                </form>
+
+                <span class="live-html">Live HTML</span>
+                <pre id="live-html-form-minimal" class="html-code"></pre>
+            </div>
+
+            <hr />
+
+            <div id="form-register-example" class="example">
+                <h2>Register Form</h2>
+
+                <p>
+                    Classic form is when user need to register is to ask email, username, password and accept terms.<br/>
+                    The rules are:
+                </p>
+
+                <ul class="list">
+                    <li>All fields are required</li>
+                    <li>Username: max 25 length, only alpha, digits and those special caracters '.' '-' '_'</li>
+                    <li>Email: valid email</li>
+                    <li>Password and Confirm password: min 10 length, max 25 length, same value between them</li>
+                    <li>Terms: must be checked</li>
+                </ul>
+
+                <form action="#form-register" method="post" data-live-html="live-html-register">
+                    <div class="__block__element__">
+                        <label for="form-register-input-username" class="__label__">Username</label>
+                        <div class="form__container">
+                            <input data-form-rules="required|max:25|regex:^[a-zA-Z0-9._-]+$"
+                                   data-form-error-required="username is required"
+                                   data-form-error-max="username cannot exceed 25 characters in length"
+                                   data-form-error-regex="username can only have alpha, digits and those special caracters '.' '-' '_'"
+                                   data-form-has-container
+                                   id="form-register-input-username"
+                                   name="form-register-input-username"
+                                   type="text"
+                                   class="__input__ __invisible__"
+                            />
+                            <span class="form__feedback"></span>
+                        </div>
+                    </div>
+                    <div class="__block__element__">
+                        <label for="form-register-input-email" class="__label__">Email</label>
+                        <div class="form__container">
+                            <input data-form-rules="email"
+                                   data-form-error-email="email is invalid"
+                                   data-form-has-container
+                                   id="form-register-input-email"
+                                   name="form-register-input-email"
+                                   type="text"
+                                   class="__input__ __invisible__"
+                            />
+                            <span class="form__feedback"></span>
+                        </div>
+                    </div>
+                    <div class="__block__element__">
+                        <label for="form-register-input-password" class="__label__">Password</label>
+                        <div class="form__container">
+                            <input data-form-rules="min:10|max:25"
+                                   data-form-error-min="password must be 10 characters in length minimum"
+                                   data-form-error-max="password cannot exceed 25 characters in length"
+                                   data-form-has-container
+                                   id="form-register-input-password"
+                                   name="form-register-input-password"
+                                   type="password"
+                                   class="__input__ __invisible__"
+                            />
+                            <span class="form__feedback"></span>
+                        </div>
+                    </div>
+                    <div class="__block__element__">
+                        <label for="form-register-input-confirm_password" class="__label__">Confirm Password</label>
+                        <div class="form__container">
+                            <input data-form-rules="equal_field:form-register-input-password"
+                                   data-form-error-equal_field="confirm password must be same as password"
+                                   data-form-has-container
+                                   id="form-register-input-confirm_password"
+                                   name="form-register-input-confirm_password"
+                                   type="password"
+                                   class="__input__ __invisible__"
+                            />
+                            <span class="form__feedback"></span>
+                        </div>
+                    </div>
+                    <div class="__block__element__">
+                        <label for="form-register-input-terms" class="__label__">Accept Terms</label>
+                        <input data-form-rules="checked"
+                               data-form-error-checked="You need to accept the terms"
+                               data-form-has-container
+                               id="form-register-input-terms"
+                               name="form-register-input-terms"
+                               type="checkbox"
+                               class="__input__"
+                        />
+                    </div>
+                    <input type="submit" value="Register" class="__button__"/>
+                </form>
+
+                <span class="live-html">Live HTML</span>
+                <pre id="live-html-register" class="html-code"></pre>
+            </div>
+
+            <hr />
+
+            <div id="form-confirm-example" class="example">
+                <h2>Confirm Form</h2>
+
+                <p>Take an example of confirm the form with a popin</p>
+
+                <form action="#form-confirm" method="post" data-form-confirm-callback="callbackConfirm">
+                    <input type="submit" value="Register"/>
+                </form>
+            </div>
+
+            <hr />
+
+            <div id="form-fieldset-example" class="example">
+                <h2>Fieldset example</h2>
+
+                <p>
+                    Fieldset are also supported.<br />
+                    If there is nested fieldset, it will update the nearest fieldset.<br />
+                    You need to add class <strong>form__fieldset</strong> to your <strong>fieldset</strong> tag for applying <strong>form__fieldset--success</strong>, <strong>form__fieldset--error</strong>.
+                </p>
+
+                <form action="#form-fieldset-example"
+                      data-form-general-error="Form is incorrect"
+                      data-form-speak-error="Form is invalid:"
+                      method="post"
+                      data-live-html="live-html-fieldset"
+                >
+                    <fieldset class="__fieldset__ __relative__ form__fieldset">
+                        <legend class="__legend__">First legend</legend>
+                        <span class="form__feedback __feedback__fieldset__"></span>
+
+                        <div class="__block__element__">
+                            <label class="__label__" for="form-fieldset-input-info_1" id="form-fieldset-label-info_1">Info 1</label>
+                            <div class="form__container">
+                                <input aria-invalid="false"
+                                       aria-labelledby="form-fieldset-label-info_1"
+                                       aria-required="true"
+                                       class="__input__ __invisible__"
+                                       data-form-error-required="Info 1 is required"
+                                       data-form-has-container
+                                       data-form-rules="required"
+                                       id="form-fieldset-input-info_1"
+                                       name="form-fieldset-input-info_1"
+                                       type="text"
+                                />
+                                <span class="form__feedback"></span>
+                            </div>
+                        </div>
+
+                        <fieldset class="__fieldset__ __relative__ form__fieldset">
+                            <legend class="__legend__">Second legend</legend>
+                            <span class="form__feedback __feedback__fieldset__"></span>
+
+                            <div class="__block__element__">
+                                <label class="__label__" for="form-fieldset-input-info_2" id="form-fieldset-label-info_2">Info 2</label>
+                                <div class="form__container">
+                                    <input aria-invalid="false"
+                                           aria-labelledby="form-fieldset-label-info_2"
+                                           aria-required="true"
+                                           class="__input__ __invisible__"
+                                           data-form-error-required="Info 2 is required"
+                                           data-form-has-container
+                                           data-form-rules="required"
+                                           id="form-fieldset-input-info_2"
+                                           name="form-fieldset-input-info_2"
+                                           type="text"
+                                    />
+                                    <span class="form__feedback"></span>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </fieldset>
+
+                    <input class="__button__" id="form-ui-submit" name="form-fieldset-submit" type="submit" value="Test to submit"/>
+                </form>
+
+                <span class="live-html">Live HTML</span>
+                <pre id="live-html-fieldset" class="html-code"></pre>
+            </div>
+
+            <hr />
+
+            <div id="form-aria_invalid" class="example">
+                <h2>Rule Aria Invalid</h2>
+                <p>This rule check if the aria-invalid attribute is set to true.</p>
+
+                <form action="#form-rule_aria_invalid" method="post" data-live-html="live-html-aria-invalid">
+                    <label for="form-rule_aria_invalid-input-username">Username</label>
+                    <input aria-invalid="true" data-form-rules="aria_invalid" data-form-error-aria_invalid="the aria-invalid attribute is set to true" id="form-rule_aria_invalid-input-username" name="form-rule_aria_invalid-input-username" type="text"/>
+                    <input type="submit" value="Test to submit"/>
+                </form>
+
+                <span class="live-html">Live HTML</span>
+                <pre id="live-html-aria-invalid" class="html-code"></pre>
+            </div>
+
+            <hr />
+
+            <div id="form-rule_callback" class="example">
+                <h2>Rule Callback</h2>
+                <p>This rule use function given in rule.<br /> You can read the function called below.</p>
+
+                <pre class="html-code">
+function myCallback(input, callback) {
+    var isAzerty = input.value === 'azerty';
+    callback(isAzerty);
+}</pre>
+
+                <form action="#form-rule_callback" method="post" data-live-html="live-html-callback">
+                    <label for="form-rule_callback-input-username">Username</label>
+                    <input data-form-rules="callback:myCallback" data-form-error-callback="the value is not 'azerty'" id="form-rule_callback-input-username" name="form-rule_callback-input-username" type="text"/>
+                    <input type="submit" value="Test to submit"/>
+                </form>
+
+                <span class="live-html">Live HTML</span>
+                <pre id="live-html-callback" class="html-code"></pre>
+            </div>
+
+            <hr />
+
+            <div id="form-rule_checked" class="example">
+                <h2>Rule Checked</h2>
+                <p>This rule check if the checkbox is checked.</p>
+
+                <form action="#form-rule_checked" method="post" data-live-html="live-html-checked">
+                    <label for="form-rule_checked-input-checked">Is Checked</label>
+                    <input data-form-rules="checked" data-form-error-checked="error, must be checked" id="form-rule_checked-input-checked" name="form-rule_checked-input-checked" type="checkbox"/>
+                    <input type="submit" value="Test to submit"/>
+                </form>
+
+                <span class="live-html">Live HTML</span>
+                <pre id="live-html-checked" class="html-code"></pre>
+            </div>
+
+            <hr />
+
+            <div id="form-rule_email" class="example">
+                <h2>Rule Email</h2>
+                <p>This rule check if the input is a valid email (the test is to check if there is an @ inside).</p>
+
+                <form action="#form-rule_email" method="post" data-live-html="live-html-email">
+                    <label for="form-rule_email-input-email">Email</label>
+                    <input data-form-rules="email" data-form-error-email="Email is invalid" id="form-rule_email-input-email" name="form-rule_email-input-email" type="text"/>
+                    <input type="submit" value="Test to submit"/>
+                </form>
+
+                <span class="live-html">Live HTML</span>
+                <pre id="live-html-email" class="html-code"></pre>
+            </div>
+
+            <hr />
+
+            <div id="form-rule_equal_field" class="example">
+                <h2>Rule Equal Field</h2>
+                <p>This rule check if the input is equal to other field.</p>
+
+                <form action="#form-rule_equal_field" method="post" data-live-html="live-html-equal_field">
+                    <p>
+                        <label for="form-rule_equal_field-input-username">Username</label>
+                        <input id="form-rule_equal_field-input-username" data-form-has-container name="form-rule_equal_field-input-username" type="text"/>
+                        <span class="form__feedback"></span>
+                    </p>
+                    <p>
+                        <label for="form-rule_equal_field-input-username_confirm">Confirm Username</label>
+                        <input data-form-has-container data-form-rules="equal_field:form-rule_equal_field-input-username" data-form-error-equal_field="Confirm Username is not the same Username given" id="form-rule_equal_field-input-username_confirm" name="form-rule_equal_field-input-username_confirm" type="text"/>
+                        <span class="form__feedback"></span>
+                    </p>
+                    <input type="submit" value="Test to submit"/>
+                </form>
+
+                <span class="live-html">Live HTML</span>
+                <pre id="live-html-equal_field" class="html-code"></pre>
+            </div>
+
+            <hr />
+
+            <div id="form-rule_max" class="example">
+                <h2>Rule Max</h2>
+                <p>This rule check if the input has 3 letters maximum.</p>
+
+                <form action="#form-rule_max" method="post" data-live-html="live-html-max">
+                    <label for="form-rule_max-input-username">Username</label>
+                    <input data-form-rules="max:3" data-form-error-max="Username must be 3 letters length maximum" id="form-rule_max-input-username" name="form-rule_max-input-username" type="text"/>
+                    <input type="submit" value="Test to submit"/>
+                </form>
+
+                <span class="live-html">Live HTML</span>
+                <pre id="live-html-max" class="html-code"></pre>
+            </div>
+
+            <hr />
+
+            <div id="form-rule_min" class="example">
+                <h2>Rule Min</h2>
+                <p>This rule check if the input has 3 letters minimum.</p>
+
+                <form action="#form-rule_min" method="post" data-live-html="live-html-min">
+                    <label for="form-rule_min-input-username">Username</label>
+                    <input data-form-rules="min:3" data-form-error-min="Username must be 3 letters length minimum" id="form-rule_min-input-username" name="form-rule_min-input-username" type="text"/>
+                    <input type="submit" value="Test to submit"/>
+                </form>
+
+                <span class="live-html">Live HTML</span>
+                <pre id="live-html-min" class="html-code"></pre>
+            </div>
+
+            <hr />
+
+            <div id="form-rule_regex" class="example">
+                <h2>Rule Regex</h2>
+                <p>This rule check if the input is matching the regex.</p>
+
+                <form action="#form-rule_regex" method="post" data-live-html="live-html-regex">
+                    <label for="form-rule_regex-input-username">Username</label>
+                    <input data-form-rules="regex:^[a-z]+$" data-form-error-regex="Username is not matching with regex ^[a-z]+$" id="form-rule_regex-input-username" name="form-rule_required-input-username" type="text"/>
+                    <input type="submit" value="Test to submit"/>
+                </form>
+
+                <span class="live-html">Live HTML</span>
+                <pre id="live-html-regex" class="html-code"></pre>
+            </div>
+
+            <hr />
+
+            <div id="form-rule_required" class="example">
+                <h2>Rule Required</h2>
+                <p>This rule check if the input has value after trimming it.</p>
+
+                <form action="#form-rule_required" method="post" data-live-html="live-html-required">
+                    <label for="form-rule_required-input-username">Username</label>
+                    <input data-form-rules="required"
+                           data-form-error-required="Username is required"
+                           id="form-rule_required-input-username"
+                           name="form-rule_required-input-username"
+                           type="text"
+                    />
+                    <input type="submit" value="Test to submit"/>
+                </form>
+
+                <span class="live-html">Live HTML</span>
+                <pre id="live-html-required" class="html-code"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script src="../dist/form.js"></script>
+
+    <script>
+        function switchTheme(e) {
+            var theme = document.querySelector('html').getAttribute('data-theme');
+            if (theme === 'light') {
+                document.querySelector('html').setAttribute('data-theme', 'dark');
+                document.getElementById('button-switch-theme').textContent = 'Switch to Light Theme';
+            } else {
+                document.querySelector('html').setAttribute('data-theme', 'light');
+                document.getElementById('button-switch-theme').textContent = 'Switch to Dark Theme';
+            }
+        }
+
+        function myCallback(input, callback) {
+            var isAzerty = input.value === 'azerty';
+            callback(isAzerty);
+        }
+
+        function findFormParent(elem) {
+            if (elem.tagName === 'FORM') {
+                return elem;
+            }
+
+            return findFormParent(elem.parentNode);
+        }
+
+        function updateLiveHTMLFromEvent(event) {
+            var form = findFormParent(event.target);
+            updateLiveHTML(form);
+        }
+
+        function updateLiveHTML(form) {
+            var live = form.getAttribute('data-live-html');
+            if (live === null) {
+                return;
+            }
+
+            var html = form.outerHTML;
+            html = html.split('><label').join(">\n        <label");
+            html = html.replaceAll('                    <', '        <');
+            html = html.replaceAll('                </form>', '</form>');
+
+            document.getElementById(live).innerText = html;
+        }
+
+        var forms = document.querySelectorAll('form');
+        var idxNodes = 0;
+        var maxNodes = forms.length;
+        for (; idxNodes < maxNodes; idxNodes++) {
+            forms[idxNodes].addEventListener('submit', updateLiveHTMLFromEvent);
+
+            var idxInputs = 0;
+            var maxInputs = forms[idxNodes].length;
+            for(; idxInputs < maxInputs; idxInputs++) {
+                var type = forms[idxNodes][idxInputs].getAttribute('type');
+                if (type === 'checkbox' || type === 'radio' || type === 'file') {
+                    forms[idxNodes][idxInputs].addEventListener('change', updateLiveHTMLFromEvent);
+                } else {
+                    forms[idxNodes][idxInputs].addEventListener('blur', updateLiveHTMLFromEvent);
+                }
+            }
+
+            updateLiveHTML(forms[idxNodes]);
+        }
+    </script>
+</body>
+</html>
