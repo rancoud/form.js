@@ -36,6 +36,8 @@ window.fnFalse = function fnTrue(elemObj, callback) {
 describe("form_helper - tryFieldIsInvalid", function(){
     beforeEach(function() {
         document.body.innerHTML = ``;
+        require("../src/rule");
+        require("../src/helper");
         require("../src/form");
     });
 

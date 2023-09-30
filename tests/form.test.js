@@ -35,6 +35,8 @@ describe("form", function(){
     <input class="form__btn form__btn--large form__btn--primary" id="form-login-submit" name="form-login-submit" type="submit" value="Log in">
 </form>`;
 
+        require("../src/rule");
+        require("../src/helper");
         require("../src/form");
     });
 

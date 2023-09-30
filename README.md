@@ -1,6 +1,6 @@
 # form.js
 
-[![Test workflow](https://img.shields.io/github/workflow/status/rancoud/form.js/tests?label=tests&logo=github)](https://github.com/rancoud/form.js/actions?workflow=tests)
+[![Test workflow](https://img.shields.io/github/actions/workflow/status/rancoud/form.js/test.yml?branch=main)](https://github.com/rancoud/form.js/actions/workflows/test.yml)
 [![Codecov](https://img.shields.io/codecov/c/github/rancoud/form.js?logo=codecov)](https://codecov.io/gh/rancoud/form.js)
 
 JS Form Manager take care of your forms by validating inputs, use feedbacks and add accessibility.  
@@ -10,7 +10,16 @@ You need to download the js file from `dist` folder, then you can include it in 
 ```html
 <script src="/form.min.js"></script>
 ```
-Then it automatically scan all `form` tag and addEventListener on them.
+Then it automatically scan all `form` tag and `addEventListener` on them.
+```js
+var forms = document.querySelectorAll("form");
+var idxNodes = 0;
+var maxNodes = forms.length;
+
+for (; idxNodes < maxNodes; ++idxNodes) {
+    new Form(forms[idxNodes]);
+}
+```
 
 ## How to use it?
 ### Form already done
@@ -142,4 +151,8 @@ Sometimes form need a popin
 You can check the [demo](./demo/index.html) for all possibilites in action.
 
 ## How to Dev
-`npm test` for test and coverage
+`npm test` or `docker buildx bake test` to test and coverage  
+`npm run build` or `docker buildx bake build` to create dist js file minified  
+`npm run jsdoc` or `docker buildx bake jsdoc` to generate documentation  
+`npm run eslint` or `docker buildx bake lint` to run eslint  
+`npm run eslint:fix` to run eslint and fix files
