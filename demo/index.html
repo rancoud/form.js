@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html data-theme="light" lang="en">
+<html data-theme="dark" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Form Demo</title>
+    <title>form.js Demo</title>
     <style>
         /* Styling the page in general */
         * {
@@ -755,6 +755,11 @@ function myCallback(input, callback) {
         var idxNodes = 0;
         var maxNodes = forms.length;
         for (; idxNodes < maxNodes; idxNodes++) {
+            let form = new Form(forms[idxNodes]);
+            if (form instanceof Error) {
+                console.error('[form.js] ' + form);
+            }
+
             forms[idxNodes].addEventListener('submit', updateLiveHTMLFromEvent);
 
             var idxInputs = 0;

@@ -1,3 +1,4 @@
+/* global FieldInspection */
 /**
  * Get function to use as callback.?????
  * To change with register callback to avoid dynamic injection.
@@ -38,9 +39,9 @@ function Rule() {}
 /**
  * Rule required, return false if empty.
  *
- * @param {Array}    rules           - 4
- * @param {FieldInspection}    fieldInspection - 5
- * @param {Function} callback        - 6
+ * @param {Array}           rules           - 4
+ * @param {FieldInspection} fieldInspection - 5
+ * @param {Function}        callback        - 6
  * @returns {undefined}
  */
 Rule.prototype.required = function required(rules, fieldInspection, callback) {
@@ -52,12 +53,14 @@ Rule.prototype.required = function required(rules, fieldInspection, callback) {
 };
 
 /**
+ * Min.
  *
- * @param {Array} rules
- * @param {FieldInspection} fieldInspection
- * @param callback
+ * @param {Array}           rules           - a
+ * @param {FieldInspection} fieldInspection - a
+ * @param {Function}        callback        - a
  */
 Rule.prototype.min = function min(rules, fieldInspection, callback) {
+    // eslint-disable-next-line operator-assignment
     rules[1] = rules[1] >> 0;
 
     if (rules[1] === 0) {
@@ -73,12 +76,14 @@ Rule.prototype.min = function min(rules, fieldInspection, callback) {
 };
 
 /**
+ * Max.
  *
- * @param rules
- * @param {FieldInspection} fieldInspection
- * @param callback
+ * @param {Array}           rules           - a
+ * @param {FieldInspection} fieldInspection - a
+ * @param {Function}        callback        - a
  */
 Rule.prototype.max = function max(rules, fieldInspection, callback) {
+    // eslint-disable-next-line operator-assignment
     rules[1] = rules[1] >> 0;
 
     if (rules[1] === 0) {
@@ -94,15 +99,16 @@ Rule.prototype.max = function max(rules, fieldInspection, callback) {
 };
 
 /**
+ * Email.
  *
- * @param rules
- * @param {FieldInspection} fieldInspection
- * @param callback
+ * @param {Array}           rules           - a
+ * @param {FieldInspection} fieldInspection - a
+ * @param {Function}        callback        - a
  */
 Rule.prototype.email = function email(rules, fieldInspection, callback) {
     var posChar = fieldInspection.val.indexOf("@");
 
-    if (posChar < 1 || posChar === (fieldInspection.len - 1)) {
+    if (posChar < 1 || posChar === fieldInspection.len - 1) {
         callback(rules[0]);
     } else {
         callback(null);
@@ -110,11 +116,13 @@ Rule.prototype.email = function email(rules, fieldInspection, callback) {
 };
 
 /**
+ * Equal Field.
  *
- * @param rules
- * @param {FieldInspection} fieldInspection
- * @param callback
+ * @param {Array}           rules           - a
+ * @param {FieldInspection} fieldInspection - a
+ * @param {Function}        callback        - a
  */
+// eslint-disable-next-line camelcase
 Rule.prototype.equal_field = function equal_field(rules, fieldInspection, callback) {
     var elem = document.getElementById(rules[1]);
 
@@ -123,6 +131,7 @@ Rule.prototype.equal_field = function equal_field(rules, fieldInspection, callba
         return;
     }
 
+    // eslint-disable-next-line no-negated-condition
     if (fieldInspection.val !== elem.value.trim()) {
         callback(rules[0]);
     } else {
@@ -131,11 +140,13 @@ Rule.prototype.equal_field = function equal_field(rules, fieldInspection, callba
 };
 
 /**
+ * Aria Invalid.
  *
- * @param rules
- * @param {FieldInspection} fieldInspection
- * @param callback
+ * @param {Array}           rules           - a
+ * @param {FieldInspection} fieldInspection - a
+ * @param {Function}        callback        - a
  */
+// eslint-disable-next-line camelcase
 Rule.prototype.aria_invalid = function aria_invalid(rules, fieldInspection, callback) {
     if (fieldInspection.elemObj.getAttribute("aria-invalid") === "true") {
         callback(rules[0]);
@@ -145,12 +156,13 @@ Rule.prototype.aria_invalid = function aria_invalid(rules, fieldInspection, call
 };
 
 /**
+ * Callback.
  *
- * @param rules
- * @param {FieldInspection} fieldInspection
- * @param callback
+ * @param {Array}           rules            - a
+ * @param {FieldInspection} fieldInspection  - a
+ * @param {Function}        callbackFunction - a
  */
-Rule.prototype.callback = function callback(rules, fieldInspection, callback) {
+Rule.prototype.callback = function callback(rules, fieldInspection, callbackFunction) {
     var fn = null;
     var args = [];
     var parts = [];
@@ -158,23 +170,23 @@ Rule.prototype.callback = function callback(rules, fieldInspection, callback) {
     var lenParts = 0;
 
     if (!rules[1]) {
-        callback(new Error("Invalid parameter rule callback, callback " + rules[1] + " not found"));
+        callbackFunction(new Error("Invalid parameter rule callback, callback " + rules[1] + " not found"));
         return;
     }
 
     fn = getFunction(rules[1]);
     if (!fn) {
-        callback(new Error("Invalid parameter rule callback, callback " + rules[1] + " not found"));
+        callbackFunction(new Error("Invalid parameter rule callback, callback " + rules[1] + " not found"));
         return;
     }
 
     args = [
         fieldInspection.elemObj,
-        function(success) {
+        function cb(success) {
             if (success === true) {
-                callback(null);
+                callbackFunction(null);
             } else {
-                callback("callback");
+                callbackFunction("callback");
             }
         }
     ];
@@ -186,18 +198,21 @@ Rule.prototype.callback = function callback(rules, fieldInspection, callback) {
         }
     }
 
+    // eslint-disable-next-line no-unused-expressions,prefer-spread
     !fn.apply(null, args);
 };
 
 /**
+ * Regex.
  *
- * @param rules
- * @param {FieldInspection} fieldInspection
- * @param callback
+ * @param {Array}           rules           - a
+ * @param {FieldInspection} fieldInspection - a
+ * @param {Function}        callback        - a
  */
 Rule.prototype.regex = function regex(rules, fieldInspection, callback) {
     var pattern = rules.slice(1).join(":");
 
+    // eslint-disable-next-line no-negated-condition
     if (!new RegExp(pattern).exec(fieldInspection.elemObj.value)) {
         callback(rules[0]);
     } else {
@@ -206,10 +221,11 @@ Rule.prototype.regex = function regex(rules, fieldInspection, callback) {
 };
 
 /**
+ * Checked.
  *
- * @param rules
- * @param {FieldInspection} fieldInspection
- * @param callback
+ * @param {Array}           rules           - a
+ * @param {FieldInspection} fieldInspection - a
+ * @param {Function}        callback        - a
  */
 Rule.prototype.checked = function checked(rules, fieldInspection, callback) {
     var name = "";
@@ -239,6 +255,7 @@ Rule.prototype.checked = function checked(rules, fieldInspection, callback) {
             callback(rules[0]);
         }
     } else {
+        // eslint-disable-next-line no-negated-condition,no-lonely-if
         if (!fieldInspection.elemObj.checked) {
             callback(rules[0]);
         } else {

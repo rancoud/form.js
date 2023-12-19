@@ -1,4 +1,4 @@
-/* global FormHelper */
+/* global FormHelper, getFunction */
 /**
  * Form Class definition.
  *
@@ -22,7 +22,7 @@ function Form(formElement) {
     /** @type {FormHelper} */
     this.formHelper = new FormHelper();
 
-    /** @type {string[]} */
+    /** @type {object[]} */
     this.listErrors = [];
 
     /** @type {object} */
@@ -31,6 +31,7 @@ function Form(formElement) {
     formElement.addEventListener("submit", this.onSubmit.bind(this), {passive: false});
 
     /* istanbul ignore next */
+    // eslint-disable-next-line no-constant-condition
     if (false) { /* BUILD REMOVE LINE - dumb condition is necessary for avoiding fails unit test */
         for (; idxNodes < maxNodes; ++idxNodes) {
             inputType = formElement[idxNodes].getAttribute("type");
@@ -120,14 +121,18 @@ Form.prototype.onChange = function onChange(event) {
  * @returns {Error|undefined}
  */
 Form.prototype.onSubmit = function onSubmit(event) {
+    var key = null;
+
     event.preventDefault();
 
     if (this.canSubmit === false) {
         return new Error("Form is already in submit processing");
     }
 
-    for (var k in this.currentCallbacks) {
-        this.currentCallbacks[k] = -1;
+    for (key in this.currentCallbacks) {
+        if (Object.hasOwn(this.currentCallbacks, key)) {
+            this.currentCallbacks[key] = -1;
+        }
     }
 
     this.canSubmit = false;
@@ -148,10 +153,10 @@ Form.prototype.onSubmit = function onSubmit(event) {
  */
 Form.prototype.checkFormFieldsState = function checkFormFieldsState(callback) {
     if (this.currentIdxNodes < this.maxNodes) {
-        this.checkFieldState(this.form[this.currentIdxNodes], true, null, (function() {
+        this.checkFieldState(this.form[this.currentIdxNodes], true, null, function cb() {
             this.currentIdxNodes += 1;
             this.checkFormFieldsState(callback);
-        }).bind(this));
+        }.bind(this));
     } else {
         callback();
     }
@@ -186,7 +191,7 @@ Form.prototype.checkFieldState = function checkFieldState(elemObj, isSubmitEvent
     }
 
     this.formHelper.setFieldLoading(currentID);
-    this.formHelper.tryFieldIsInvalid(currentID, currentRules, (function (error) {
+    this.formHelper.tryFieldIsInvalid(currentID, currentRules, function cb(error) {
         if (now !== null && (this.currentCallbacks[currentID] && this.currentCallbacks[currentID] !== now)) {
             return;
         }
@@ -204,7 +209,7 @@ Form.prototype.checkFieldState = function checkFieldState(elemObj, isSubmitEvent
         if (callback) {
             callback(error);
         }
-    }).bind(this));
+    }.bind(this));
 };
 
 /**
@@ -260,17 +265,7 @@ Form.prototype.canFinallySubmit = function canFinallySubmit() {
     /** @type {string} */
     var speakIntro = "";
 
-    if (!this.hasError) {
-        if (this.callConfirmCallback()) {
-            return;
-        }
-
-        if (this.showConfirm()) {
-            return;
-        }
-
-        this.form.submit();
-    } else {
+    if (this.hasError) {
         generalErrorTitle = this.form.getAttribute("data-form-general-error");
         if (generalErrorTitle) {
             this.formHelper.setGeneralError(this.form.getAttribute("id"), generalErrorTitle, this.listErrors);
@@ -282,12 +277,22 @@ Form.prototype.canFinallySubmit = function canFinallySubmit() {
 
             speakIntro = this.form.getAttribute("data-form-speak-error") || "Form is invalid:";
             if (typeof window.screenReaderSpeak === "function") {
-                //todo : have a "try catch" to protect if shit happens
+                // Have a "try catch" to protect if shit happens
                 window.screenReaderSpeak(speakIntro + " " + speak.join(", "));
             }
         }
 
         this.canSubmit = true;
+    } else {
+        if (this.callConfirmCallback()) {
+            return;
+        }
+
+        if (this.showConfirm()) {
+            return;
+        }
+
+        this.form.submit();
     }
 };
 
@@ -312,14 +317,15 @@ Form.prototype.callConfirmCallback = function callConfirmCallback() {
         return false;
     }
 
+    // eslint-disable-next-line no-useless-call
     fn.apply(null, [
-        this.form, (function(hasConfirmed) {
-            if(hasConfirmed) {
+        this.form, function cb(hasConfirmed) {
+            if (hasConfirmed) {
                 this.form.submit();
             } else {
                 this.canSubmit = true;
             }
-        }).bind(this)
+        }.bind(this)
     ]);
 
     return true;

@@ -83,6 +83,12 @@ function setFeedbackCssClass(elemObj, cssClass) {
     }
 }
 
+/**
+ * SetFieldsetCssClass.
+ *
+ * @param {HTMLElement} elemObj  - a
+ * @param {string}      cssClass - a
+ */
 function setFieldsetCssClass(elemObj, cssClass) {
     /** @type {HTMLFieldSetElement} */
     var fieldsetObj = findParentFieldset(elemObj);
@@ -96,13 +102,19 @@ function setFieldsetCssClass(elemObj, cssClass) {
     }
 }
 
+/**
+ * FindFeedbacks.
+ *
+ * @param {HTMLElement} elemObj - a
+ * @returns {HTMLFieldSetElement[]}
+ */
 function findFeedbacks(elemObj) {
     var maxParentBouncing = 0;
 
     /** @type {HTMLElement} */
     var currentObj = elemObj;
 
-    /** @type {HTMLElement[]} */
+    /** @type {HTMLFieldSetElement[]} */
     var feedbacks = [];
 
     var idxChilds = 0;
@@ -133,6 +145,12 @@ function findFeedbacks(elemObj) {
     return feedbacks;
 }
 
+/**
+ * FindParentFieldset.
+ *
+ * @param {HTMLElement} elemObj - a
+ * @returns {HTMLFieldSetElement}
+ */
 function findParentFieldset(elemObj) {
     var maxParentBouncing = 0;
 
@@ -147,18 +165,25 @@ function findParentFieldset(elemObj) {
 
         if (fieldsetObj.classList.contains("form__fieldset")) {
             return fieldsetObj;
-        } else {
-            maxParentBouncing += 1;
         }
+
+        maxParentBouncing += 1;
     } while (maxParentBouncing < 10);
 
     return null;
 }
 
+/**
+ * Get Label Error ID.
+ *
+ * @param {HTMLElement} elemObj - html element
+ * @returns {string}
+ */
 function getLabelErrorID(elemObj) {
     var inputID = "";
     var labelID = "";
 
+    // eslint-disable-next-line no-negated-condition
     if (elemObj.getAttribute("type") !== "radio") {
         inputID = elemObj.getAttribute("id");
         labelID = inputID.replace("-input-", "-label-");
@@ -170,6 +195,12 @@ function getLabelErrorID(elemObj) {
     return labelID + "-error";
 }
 
+/**
+ * Add Label Error.
+ *
+ * @param {HTMLElement} elemObj      - html element
+ * @param {string}      errorMessage - message
+ */
 function addLabelError(elemObj, errorMessage) {
     var labelErrorID = getLabelErrorID(elemObj);
 
@@ -197,6 +228,7 @@ function addLabelError(elemObj, errorMessage) {
         label.setAttribute("id", labelErrorID);
         label.appendChild(document.createTextNode(errorMessage));
 
+        // eslint-disable-next-line no-negated-condition
         if (elemObj.getAttribute("type") !== "radio") {
             elemObj.setAttribute("aria-labelledby", labelID + " " + labelErrorID);
             if (elemObj.hasAttribute("data-form-has-container")) {
@@ -216,6 +248,11 @@ function addLabelError(elemObj, errorMessage) {
     }
 }
 
+/**
+ * Remove Label Error.
+ *
+ * @param {HTMLElement} elemObj - html element
+ */
 function removeLabelError(elemObj) {
     var labelID = "";
 
@@ -314,6 +351,7 @@ FormHelper.prototype.setFieldLoading = function setFieldLoading(elemID) {
 // endregion
 
 // region Remove General Error
+// eslint-disable-next-line func-names
 FormHelper.prototype.removeGeneralError = function (elemID) {
     var elemObj = getHTMLElement(elemID);
     if (!(elemObj instanceof HTMLElement)) {
@@ -323,6 +361,11 @@ FormHelper.prototype.removeGeneralError = function (elemID) {
     removeGeneralError(elemObj);
 };
 
+/**
+ * RemoveGeneralError.
+ *
+ * @param {HTMLElement} elemObj - a
+ */
 function removeGeneralError(elemObj) {
     var prevElem = elemObj.previousElementSibling;
 
@@ -336,6 +379,21 @@ function removeGeneralError(elemObj) {
 
 // region Set General Error
 FormHelper.prototype.setGeneralError = function setGeneralError(elemID, title, listErrors) {
+    /** @type Number */
+    var countErrors = 0;
+
+    /** @type Error */
+    var err = null;
+
+    /** @type HTMLDivElement */
+    var generalInfo = null;
+
+    /** @type HTMLHeadingElement */
+    var generalTitle = null;
+
+    /** @type HTMLUListElement */
+    var listRoot = null;
+
     var elemObj = getHTMLElement(elemID);
     if (!(elemObj instanceof HTMLElement)) {
         return elemObj;
@@ -353,19 +411,19 @@ FormHelper.prototype.setGeneralError = function setGeneralError(elemID, title, l
         return new TypeError("Invalid argument listErrors, expect Array, get " + typeof listErrors);
     }
 
-    var countErrors = listErrors.length;
+    countErrors = listErrors.length;
     if (countErrors === 0) {
         return new Error("Argument listErrors is empty");
     }
 
-    var err = checkErrorFormat(listErrors);
+    err = checkErrorFormat(listErrors);
     if (err) {
         return err;
     }
 
-    var generalInfo = createGeneralErrorDiv(elemID);
-    var generalTitle = createGeneralErrorTitle(title);
-    var listRoot = createGeneralErrorItems(listErrors);
+    generalInfo = createGeneralErrorDiv(elemID);
+    generalTitle = createGeneralErrorTitle(title);
+    listRoot = createGeneralErrorItems(listErrors);
 
     generalInfo.appendChild(generalTitle);
     generalInfo.appendChild(listRoot);
@@ -375,6 +433,12 @@ FormHelper.prototype.setGeneralError = function setGeneralError(elemID, title, l
     elemObj.insertAdjacentElement("beforebegin", generalInfo);
 };
 
+/**
+ * CheckErrorFormat.
+ *
+ * @param {Array} listErrors - a
+ * @returns {Error|null}
+ */
 function checkErrorFormat(listErrors) {
     var idxError = 0;
     var maxError = listErrors.length;
@@ -383,6 +447,7 @@ function checkErrorFormat(listErrors) {
             return new Error("Invalid argument listErrors[" + idxError + "], expect Object");
         }
 
+        // eslint-disable-next-line no-prototype-builtins
         if (!listErrors[idxError].hasOwnProperty("id") || typeof listErrors[idxError].id !== "string") {
             return new Error("Invalid argument listErrors[" + idxError + "].id, expect string");
         }
@@ -391,6 +456,7 @@ function checkErrorFormat(listErrors) {
             return new Error("Invalid argument listErrors[" + idxError + "].id is empty");
         }
 
+        // eslint-disable-next-line no-prototype-builtins
         if (!listErrors[idxError].hasOwnProperty("message") || typeof listErrors[idxError].message !== "string") {
             return new Error("Invalid argument listErrors[" + idxError + "].message, expect string");
         }
@@ -399,6 +465,7 @@ function checkErrorFormat(listErrors) {
             return new Error("Invalid argument listErrors[" + idxError + "].message is empty");
         }
 
+        // eslint-disable-next-line no-prototype-builtins
         if (listErrors[idxError].hasOwnProperty("more") && typeof listErrors[idxError].more !== "string") {
             return new Error("Invalid argument listErrors[" + idxError + "].more, expect string");
         }
@@ -407,6 +474,12 @@ function checkErrorFormat(listErrors) {
     return null;
 }
 
+/**
+ * CreateGeneralErrorDiv.
+ *
+ * @param {string} elemID - a
+ * @returns {HTMLDivElement}
+ */
 function createGeneralErrorDiv(elemID) {
     var generalInfo = document.createElement("div");
     generalInfo.setAttribute("role", "alert");
@@ -416,6 +489,12 @@ function createGeneralErrorDiv(elemID) {
     return generalInfo;
 }
 
+/**
+ * CreateGeneralErrorTitle.
+ *
+ * @param {string} title - a
+ * @returns {HTMLHeadingElement}
+ */
 function createGeneralErrorTitle(title) {
     var titleH4 = document.createElement("h4");
     titleH4.classList.add("block__title", "block__title--small");
@@ -424,25 +503,34 @@ function createGeneralErrorTitle(title) {
     return titleH4;
 }
 
+/**
+ * CreateGeneralErrorItems.
+ *
+ * @param {Array} listErrors - a
+ * @returns {HTMLUListElement}
+ */
 function createGeneralErrorItems(listErrors) {
+    var idxErrors = 0;
+    var max = 0;
+    var listItem = null;
+    var listItemLink = null;
     var listRoot = document.createElement("ul");
     listRoot.classList.add("block__list");
 
-    var i = 0;
-    var max = listErrors.length;
-    for (;i < max; i++) {
-        var listItem = document.createElement("li");
+    max = listErrors.length;
+    for (;idxErrors < max; ++idxErrors) {
+        listItem = document.createElement("li");
         listItem.classList.add("block__list-item");
 
-        var listItemLink = document.createElement("a");
+        listItemLink = document.createElement("a");
         listItemLink.classList.add("block__list-link");
-        listItemLink.setAttribute("href", "#" + listErrors[i].id);
-        listItemLink.appendChild(document.createTextNode(listErrors[i].message));
+        listItemLink.setAttribute("href", "#" + listErrors[idxErrors].id);
+        listItemLink.appendChild(document.createTextNode(listErrors[idxErrors].message));
 
         listItem.appendChild(listItemLink);
-        if (listErrors[i].more && listErrors[i].more.length > 0) {
+        if (listErrors[idxErrors].more && listErrors[idxErrors].more.length > 0) {
             listItem.appendChild(document.createElement("br"));
-            listItem.appendChild(document.createTextNode(listErrors[i].more));
+            listItem.appendChild(document.createTextNode(listErrors[idxErrors].more));
         }
 
         listRoot.appendChild(listItem);
@@ -495,18 +583,20 @@ FormHelper.prototype.tryFieldIsInvalid = function tryFieldIsInvalid(elemID, rule
 };
 
 /**
+ * Treat rules.
  *
- * @param {FieldInspection} fieldInspection
- * @param callback
+ * @param {FieldInspection} fieldInspection - a
+ * @param {Function}        callback        - a
+ * @returns {undefined}
  */
 function treatRulesLeft(fieldInspection, callback) {
     if (fieldInspection.idxOptionsTextParts < fieldInspection.maxOptionsTextParts) {
-        treatCurrentRule(fieldInspection, function(err) {
-            if (err !== null) {
-                callback(err);
-            } else {
-                fieldInspection.idxOptionsTextParts++;
+        treatCurrentRule(fieldInspection, function cb(err) {
+            if (err === null) {
+                fieldInspection.idxOptionsTextParts += 1;
                 treatRulesLeft(fieldInspection, callback);
+            } else {
+                callback(err);
             }
         });
     } else {
@@ -527,6 +617,7 @@ function treatCurrentRule(fieldInspection, callback) {
     /** @type {Rule} */
     var rule = new Rule();
 
+    // eslint-disable-next-line no-negated-condition
     if (!rule[currentRule[0]]) {
         callback(new Error("Invalid rule " + currentRule[0]));
     } else {

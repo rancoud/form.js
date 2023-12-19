@@ -39,6 +39,7 @@
    * @property {number} maxOptionsTextParts - aaaa
    */
 
+  /* global FieldInspection */
   /**
    * Get function to use as callback.?????
    * To change with register callback to avoid dynamic injection.
@@ -79,9 +80,9 @@
   /**
    * Rule required, return false if empty.
    *
-   * @param {Array}    rules           - 4
-   * @param {FieldInspection}    fieldInspection - 5
-   * @param {Function} callback        - 6
+   * @param {Array}           rules           - 4
+   * @param {FieldInspection} fieldInspection - 5
+   * @param {Function}        callback        - 6
    * @returns {undefined}
    */
   Rule.prototype.required = function required(rules, fieldInspection, callback) {
@@ -93,12 +94,14 @@
   };
 
   /**
+   * Min.
    *
-   * @param {Array} rules
-   * @param {FieldInspection} fieldInspection
-   * @param callback
+   * @param {Array}           rules           - a
+   * @param {FieldInspection} fieldInspection - a
+   * @param {Function}        callback        - a
    */
   Rule.prototype.min = function min(rules, fieldInspection, callback) {
+    // eslint-disable-next-line operator-assignment
     rules[1] = rules[1] >> 0;
 
     if (rules[1] === 0) {
@@ -114,12 +117,14 @@
   };
 
   /**
+   * Max.
    *
-   * @param rules
-   * @param {FieldInspection} fieldInspection
-   * @param callback
+   * @param {Array}           rules           - a
+   * @param {FieldInspection} fieldInspection - a
+   * @param {Function}        callback        - a
    */
   Rule.prototype.max = function max(rules, fieldInspection, callback) {
+    // eslint-disable-next-line operator-assignment
     rules[1] = rules[1] >> 0;
 
     if (rules[1] === 0) {
@@ -135,10 +140,11 @@
   };
 
   /**
+   * Email.
    *
-   * @param rules
-   * @param {FieldInspection} fieldInspection
-   * @param callback
+   * @param {Array}           rules           - a
+   * @param {FieldInspection} fieldInspection - a
+   * @param {Function}        callback        - a
    */
   Rule.prototype.email = function email(rules, fieldInspection, callback) {
     var posChar = fieldInspection.val.indexOf("@");
@@ -151,11 +157,13 @@
   };
 
   /**
+   * Equal Field.
    *
-   * @param rules
-   * @param {FieldInspection} fieldInspection
-   * @param callback
+   * @param {Array}           rules           - a
+   * @param {FieldInspection} fieldInspection - a
+   * @param {Function}        callback        - a
    */
+  // eslint-disable-next-line camelcase
   Rule.prototype.equal_field = function equal_field(rules, fieldInspection, callback) {
     var elem = document.getElementById(rules[1]);
 
@@ -164,6 +172,7 @@
       return;
     }
 
+    // eslint-disable-next-line no-negated-condition
     if (fieldInspection.val !== elem.value.trim()) {
       callback(rules[0]);
     } else {
@@ -172,11 +181,13 @@
   };
 
   /**
+   * Aria Invalid.
    *
-   * @param rules
-   * @param {FieldInspection} fieldInspection
-   * @param callback
+   * @param {Array}           rules           - a
+   * @param {FieldInspection} fieldInspection - a
+   * @param {Function}        callback        - a
    */
+  // eslint-disable-next-line camelcase
   Rule.prototype.aria_invalid = function aria_invalid(rules, fieldInspection, callback) {
     if (fieldInspection.elemObj.getAttribute("aria-invalid") === "true") {
       callback(rules[0]);
@@ -186,12 +197,13 @@
   };
 
   /**
+   * Callback.
    *
-   * @param rules
-   * @param {FieldInspection} fieldInspection
-   * @param callback
+   * @param {Array}           rules            - a
+   * @param {FieldInspection} fieldInspection  - a
+   * @param {Function}        callbackFunction - a
    */
-  Rule.prototype.callback = function callback(rules, fieldInspection, callback) {
+  Rule.prototype.callback = function callback(rules, fieldInspection, callbackFunction) {
     var fn = null;
     var args = [];
     var parts = [];
@@ -199,23 +211,23 @@
     var lenParts = 0;
 
     if (!rules[1]) {
-      callback(new Error("Invalid parameter rule callback, callback " + rules[1] + " not found"));
+      callbackFunction(new Error("Invalid parameter rule callback, callback " + rules[1] + " not found"));
       return;
     }
 
     fn = getFunction(rules[1]);
     if (!fn) {
-      callback(new Error("Invalid parameter rule callback, callback " + rules[1] + " not found"));
+      callbackFunction(new Error("Invalid parameter rule callback, callback " + rules[1] + " not found"));
       return;
     }
 
     args = [
     fieldInspection.elemObj,
-    function (success) {
+    function cb(success) {
       if (success === true) {
-        callback(null);
+        callbackFunction(null);
       } else {
-        callback("callback");
+        callbackFunction("callback");
       }
     }];
 
@@ -227,18 +239,21 @@
       }
     }
 
+    // eslint-disable-next-line no-unused-expressions,prefer-spread
     !fn.apply(null, args);
   };
 
   /**
+   * Regex.
    *
-   * @param rules
-   * @param {FieldInspection} fieldInspection
-   * @param callback
+   * @param {Array}           rules           - a
+   * @param {FieldInspection} fieldInspection - a
+   * @param {Function}        callback        - a
    */
   Rule.prototype.regex = function regex(rules, fieldInspection, callback) {
     var pattern = rules.slice(1).join(":");
 
+    // eslint-disable-next-line no-negated-condition
     if (!new RegExp(pattern).exec(fieldInspection.elemObj.value)) {
       callback(rules[0]);
     } else {
@@ -247,10 +262,11 @@
   };
 
   /**
+   * Checked.
    *
-   * @param rules
-   * @param {FieldInspection} fieldInspection
-   * @param callback
+   * @param {Array}           rules           - a
+   * @param {FieldInspection} fieldInspection - a
+   * @param {Function}        callback        - a
    */
   Rule.prototype.checked = function checked(rules, fieldInspection, callback) {
     var name = "";
@@ -280,6 +296,7 @@
         callback(rules[0]);
       }
     } else {
+      // eslint-disable-next-line no-negated-condition,no-lonely-if
       if (!fieldInspection.elemObj.checked) {
         callback(rules[0]);
       } else {
@@ -374,6 +391,12 @@
     }
   }
 
+  /**
+   * SetFieldsetCssClass.
+   *
+   * @param {HTMLElement} elemObj  - a
+   * @param {string}      cssClass - a
+   */
   function setFieldsetCssClass(elemObj, cssClass) {
     /** @type {HTMLFieldSetElement} */
     var fieldsetObj = findParentFieldset(elemObj);
@@ -387,13 +410,19 @@
     }
   }
 
+  /**
+   * FindFeedbacks.
+   *
+   * @param {HTMLElement} elemObj - a
+   * @returns {HTMLFieldSetElement[]}
+   */
   function findFeedbacks(elemObj) {
     var maxParentBouncing = 0;
 
     /** @type {HTMLElement} */
     var currentObj = elemObj;
 
-    /** @type {HTMLElement[]} */
+    /** @type {HTMLFieldSetElement[]} */
     var feedbacks = [];
 
     var idxChilds = 0;
@@ -424,6 +453,12 @@
     return feedbacks;
   }
 
+  /**
+   * FindParentFieldset.
+   *
+   * @param {HTMLElement} elemObj - a
+   * @returns {HTMLFieldSetElement}
+   */
   function findParentFieldset(elemObj) {
     var maxParentBouncing = 0;
 
@@ -438,18 +473,25 @@
 
       if (fieldsetObj.classList.contains("form__fieldset")) {
         return fieldsetObj;
-      } else {
-        maxParentBouncing += 1;
       }
+
+      maxParentBouncing += 1;
     } while (maxParentBouncing < 10);
 
     return null;
   }
 
+  /**
+   * Get Label Error ID.
+   *
+   * @param {HTMLElement} elemObj - html element
+   * @returns {string}
+   */
   function getLabelErrorID(elemObj) {
     var inputID = "";
     var labelID = "";
 
+    // eslint-disable-next-line no-negated-condition
     if (elemObj.getAttribute("type") !== "radio") {
       inputID = elemObj.getAttribute("id");
       labelID = inputID.replace("-input-", "-label-");
@@ -461,6 +503,12 @@
     return labelID + "-error";
   }
 
+  /**
+   * Add Label Error.
+   *
+   * @param {HTMLElement} elemObj      - html element
+   * @param {string}      errorMessage - message
+   */
   function addLabelError(elemObj, errorMessage) {
     var labelErrorID = getLabelErrorID(elemObj);
 
@@ -488,6 +536,7 @@
       label.setAttribute("id", labelErrorID);
       label.appendChild(document.createTextNode(errorMessage));
 
+      // eslint-disable-next-line no-negated-condition
       if (elemObj.getAttribute("type") !== "radio") {
         elemObj.setAttribute("aria-labelledby", labelID + " " + labelErrorID);
         if (elemObj.hasAttribute("data-form-has-container")) {
@@ -507,6 +556,11 @@
     }
   }
 
+  /**
+   * Remove Label Error.
+   *
+   * @param {HTMLElement} elemObj - html element
+   */
   function removeLabelError(elemObj) {
     var labelID = "";
 
@@ -605,6 +659,7 @@
   // endregion
 
   // region Remove General Error
+  // eslint-disable-next-line func-names
   FormHelper.prototype.removeGeneralError = function (elemID) {
     var elemObj = getHTMLElement(elemID);
     if (!(elemObj instanceof HTMLElement)) {
@@ -614,6 +669,11 @@
     removeGeneralError(elemObj);
   };
 
+  /**
+   * RemoveGeneralError.
+   *
+   * @param {HTMLElement} elemObj - a
+   */
   function removeGeneralError(elemObj) {
     var prevElem = elemObj.previousElementSibling;
 
@@ -627,6 +687,21 @@
 
   // region Set General Error
   FormHelper.prototype.setGeneralError = function setGeneralError(elemID, title, listErrors) {
+    /** @type Number */
+    var countErrors = 0;
+
+    /** @type Error */
+    var err = null;
+
+    /** @type HTMLDivElement */
+    var generalInfo = null;
+
+    /** @type HTMLHeadingElement */
+    var generalTitle = null;
+
+    /** @type HTMLUListElement */
+    var listRoot = null;
+
     var elemObj = getHTMLElement(elemID);
     if (!(elemObj instanceof HTMLElement)) {
       return elemObj;
@@ -644,19 +719,19 @@
       return new TypeError("Invalid argument listErrors, expect Array, get " + typeof listErrors);
     }
 
-    var countErrors = listErrors.length;
+    countErrors = listErrors.length;
     if (countErrors === 0) {
       return new Error("Argument listErrors is empty");
     }
 
-    var err = checkErrorFormat(listErrors);
+    err = checkErrorFormat(listErrors);
     if (err) {
       return err;
     }
 
-    var generalInfo = createGeneralErrorDiv(elemID);
-    var generalTitle = createGeneralErrorTitle(title);
-    var listRoot = createGeneralErrorItems(listErrors);
+    generalInfo = createGeneralErrorDiv(elemID);
+    generalTitle = createGeneralErrorTitle(title);
+    listRoot = createGeneralErrorItems(listErrors);
 
     generalInfo.appendChild(generalTitle);
     generalInfo.appendChild(listRoot);
@@ -666,6 +741,12 @@
     elemObj.insertAdjacentElement("beforebegin", generalInfo);
   };
 
+  /**
+   * CheckErrorFormat.
+   *
+   * @param {Array} listErrors - a
+   * @returns {Error|null}
+   */
   function checkErrorFormat(listErrors) {
     var idxError = 0;
     var maxError = listErrors.length;
@@ -674,6 +755,7 @@
         return new Error("Invalid argument listErrors[" + idxError + "], expect Object");
       }
 
+      // eslint-disable-next-line no-prototype-builtins
       if (!listErrors[idxError].hasOwnProperty("id") || typeof listErrors[idxError].id !== "string") {
         return new Error("Invalid argument listErrors[" + idxError + "].id, expect string");
       }
@@ -682,6 +764,7 @@
         return new Error("Invalid argument listErrors[" + idxError + "].id is empty");
       }
 
+      // eslint-disable-next-line no-prototype-builtins
       if (!listErrors[idxError].hasOwnProperty("message") || typeof listErrors[idxError].message !== "string") {
         return new Error("Invalid argument listErrors[" + idxError + "].message, expect string");
       }
@@ -690,6 +773,7 @@
         return new Error("Invalid argument listErrors[" + idxError + "].message is empty");
       }
 
+      // eslint-disable-next-line no-prototype-builtins
       if (listErrors[idxError].hasOwnProperty("more") && typeof listErrors[idxError].more !== "string") {
         return new Error("Invalid argument listErrors[" + idxError + "].more, expect string");
       }
@@ -698,6 +782,12 @@
     return null;
   }
 
+  /**
+   * CreateGeneralErrorDiv.
+   *
+   * @param {string} elemID - a
+   * @returns {HTMLDivElement}
+   */
   function createGeneralErrorDiv(elemID) {
     var generalInfo = document.createElement("div");
     generalInfo.setAttribute("role", "alert");
@@ -707,6 +797,12 @@
     return generalInfo;
   }
 
+  /**
+   * CreateGeneralErrorTitle.
+   *
+   * @param {string} title - a
+   * @returns {HTMLHeadingElement}
+   */
   function createGeneralErrorTitle(title) {
     var titleH4 = document.createElement("h4");
     titleH4.classList.add("block__title", "block__title--small");
@@ -715,25 +811,34 @@
     return titleH4;
   }
 
+  /**
+   * CreateGeneralErrorItems.
+   *
+   * @param {Array} listErrors - a
+   * @returns {HTMLUListElement}
+   */
   function createGeneralErrorItems(listErrors) {
+    var idxErrors = 0;
+    var max = 0;
+    var listItem = null;
+    var listItemLink = null;
     var listRoot = document.createElement("ul");
     listRoot.classList.add("block__list");
 
-    var i = 0;
-    var max = listErrors.length;
-    for (; i < max; i++) {
-      var listItem = document.createElement("li");
+    max = listErrors.length;
+    for (; idxErrors < max; ++idxErrors) {
+      listItem = document.createElement("li");
       listItem.classList.add("block__list-item");
 
-      var listItemLink = document.createElement("a");
+      listItemLink = document.createElement("a");
       listItemLink.classList.add("block__list-link");
-      listItemLink.setAttribute("href", "#" + listErrors[i].id);
-      listItemLink.appendChild(document.createTextNode(listErrors[i].message));
+      listItemLink.setAttribute("href", "#" + listErrors[idxErrors].id);
+      listItemLink.appendChild(document.createTextNode(listErrors[idxErrors].message));
 
       listItem.appendChild(listItemLink);
-      if (listErrors[i].more && listErrors[i].more.length > 0) {
+      if (listErrors[idxErrors].more && listErrors[idxErrors].more.length > 0) {
         listItem.appendChild(document.createElement("br"));
-        listItem.appendChild(document.createTextNode(listErrors[i].more));
+        listItem.appendChild(document.createTextNode(listErrors[idxErrors].more));
       }
 
       listRoot.appendChild(listItem);
@@ -786,18 +891,20 @@
   };
 
   /**
+   * Treat rules.
    *
-   * @param {FieldInspection} fieldInspection
-   * @param callback
+   * @param {FieldInspection} fieldInspection - a
+   * @param {Function}        callback        - a
+   * @returns {undefined}
    */
   function treatRulesLeft(fieldInspection, callback) {
     if (fieldInspection.idxOptionsTextParts < fieldInspection.maxOptionsTextParts) {
-      treatCurrentRule(fieldInspection, function (err) {
-        if (err !== null) {
-          callback(err);
-        } else {
-          fieldInspection.idxOptionsTextParts++;
+      treatCurrentRule(fieldInspection, function cb(err) {
+        if (err === null) {
+          fieldInspection.idxOptionsTextParts += 1;
           treatRulesLeft(fieldInspection, callback);
+        } else {
+          callback(err);
         }
       });
     } else {
@@ -818,6 +925,7 @@
     /** @type {Rule} */
     var rule = new Rule();
 
+    // eslint-disable-next-line no-negated-condition
     if (!rule[currentRule[0]]) {
       callback(new Error("Invalid rule " + currentRule[0]));
     } else {
@@ -827,7 +935,7 @@
   // endregion
 
 
-  /* global FormHelper */
+  /* global FormHelper, getFunction */
   /**
    * Form Class definition.
    *
@@ -851,7 +959,7 @@
     /** @type {FormHelper} */
     this.formHelper = new FormHelper();
 
-    /** @type {string[]} */
+    /** @type {object[]} */
     this.listErrors = [];
 
     /** @type {object} */
@@ -860,6 +968,7 @@
     formElement.addEventListener("submit", this.onSubmit.bind(this), { passive: false });
 
     /* istanbul ignore next */
+    // eslint-disable-next-line no-constant-condition
     for (; idxNodes < maxNodes; ++idxNodes) {
       inputType = formElement[idxNodes].getAttribute("type");
       if (inputType === "checkbox" || inputType === "radio" || inputType === "file") {
@@ -947,14 +1056,18 @@
    * @returns {Error|undefined}
    */
   Form.prototype.onSubmit = function onSubmit(event) {
+    var key = null;
+
     event.preventDefault();
 
     if (this.canSubmit === false) {
       return new Error("Form is already in submit processing");
     }
 
-    for (var k in this.currentCallbacks) {
-      this.currentCallbacks[k] = -1;
+    for (key in this.currentCallbacks) {
+      if (Object.hasOwn(this.currentCallbacks, key)) {
+        this.currentCallbacks[key] = -1;
+      }
     }
 
     this.canSubmit = false;
@@ -975,7 +1088,7 @@
    */
   Form.prototype.checkFormFieldsState = function checkFormFieldsState(callback) {
     if (this.currentIdxNodes < this.maxNodes) {
-      this.checkFieldState(this.form[this.currentIdxNodes], true, null, function () {
+      this.checkFieldState(this.form[this.currentIdxNodes], true, null, function cb() {
         this.currentIdxNodes += 1;
         this.checkFormFieldsState(callback);
       }.bind(this));
@@ -1013,7 +1126,7 @@
     }
 
     this.formHelper.setFieldLoading(currentID);
-    this.formHelper.tryFieldIsInvalid(currentID, currentRules, function (error) {
+    this.formHelper.tryFieldIsInvalid(currentID, currentRules, function cb(error) {
       if (now !== null && this.currentCallbacks[currentID] && this.currentCallbacks[currentID] !== now) {
         return;
       }
@@ -1087,17 +1200,7 @@
     /** @type {string} */
     var speakIntro = "";
 
-    if (!this.hasError) {
-      if (this.callConfirmCallback()) {
-        return;
-      }
-
-      if (this.showConfirm()) {
-        return;
-      }
-
-      this.form.submit();
-    } else {
+    if (this.hasError) {
       generalErrorTitle = this.form.getAttribute("data-form-general-error");
       if (generalErrorTitle) {
         this.formHelper.setGeneralError(this.form.getAttribute("id"), generalErrorTitle, this.listErrors);
@@ -1109,12 +1212,22 @@
 
         speakIntro = this.form.getAttribute("data-form-speak-error") || "Form is invalid:";
         if (typeof window.screenReaderSpeak === "function") {
-          //todo : have a "try catch" to protect if shit happens
+          // Have a "try catch" to protect if shit happens
           window.screenReaderSpeak(speakIntro + " " + speak.join(", "));
         }
       }
 
       this.canSubmit = true;
+    } else {
+      if (this.callConfirmCallback()) {
+        return;
+      }
+
+      if (this.showConfirm()) {
+        return;
+      }
+
+      this.form.submit();
     }
   };
 
@@ -1139,8 +1252,9 @@
       return false;
     }
 
+    // eslint-disable-next-line no-useless-call
     fn.apply(null, [
-    this.form, function (hasConfirmed) {
+    this.form, function cb(hasConfirmed) {
       if (hasConfirmed) {
         this.form.submit();
       } else {
