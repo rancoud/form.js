@@ -13,21 +13,29 @@ describe("form_helper", function(){
     });
 
     it("should work without error with empty dom", function(done) {
+        let err = null;
         const formHelper = new window.FormHelper();
 
-        formHelper.setFieldNeutral("azerty", "a");
+        err = formHelper.setFieldNeutral("azerty", "a");
+        expect(err).toBeInstanceOf(Error);
 
-        formHelper.setFieldValid("azerty");
+        err = formHelper.setFieldValid("azerty");
+        expect(err).toBeInstanceOf(Error);
 
-        formHelper.setFieldInvalid("azerty", "error");
+        err = formHelper.setFieldInvalid("azerty", "error");
+        expect(err).toBeInstanceOf(Error);
 
-        formHelper.setFieldLoading("azerty");
+        err = formHelper.setFieldLoading("azerty");
+        expect(err).toBeInstanceOf(Error);
 
-        formHelper.removeGeneralError("azerty");
+        err = formHelper.removeGeneralError("azerty");
+        expect(err).toBeInstanceOf(Error);
 
-        formHelper.setGeneralError("azerty", ["infos"]);
+        err = formHelper.setGeneralError("azerty", ["infos"]);
+        expect(err).toBeInstanceOf(Error);
 
-        formHelper.tryFieldIsInvalid("azerty", "", function() {});
+        err = formHelper.tryFieldIsInvalid("azerty", "", function() {});
+        expect(err).toBeUndefined();
 
         done();
     });

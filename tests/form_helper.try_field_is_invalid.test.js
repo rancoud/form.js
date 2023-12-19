@@ -19,7 +19,7 @@ window.fnTrueWithTwoArgs = function fnTrueWithArg(elemObj, callback, a, b) {
 window.MyNamespace = {};
 window.MyNamespace.MyFunc = function MyFunc(elemObj, callback) {
     setTimeout(function() {
-        fnTrue(elemObj, callback);
+        window.fnTrue(elemObj, callback);
     },100);
 };
 window.fnSpecial = function fnTrueWithArg(elemObj, callback, a, b) {

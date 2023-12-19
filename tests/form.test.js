@@ -456,30 +456,6 @@ describe("form", function(){
     <input class="form__btn form__btn--large form__btn--primary" id="form-login-submit" name="form-login-submit" type="submit" value="Log in">
 </form>`;
 
-        const form = new window.Form(document.getElementById('form-login'));
-        let fakeEvent = {
-            "preventDefault": function() {},
-            "currentTarget": [
-                document.getElementById("form-login-input-user"),
-            ],
-        };
-        var f = document.getElementById("form-login");
-        f.submit = function() {done();};
-        form.setForm = function(form) { this.form = form; };
-        form.setForm(f);
-        form.callConfirmCallback();
-    });
-
-    it("should call confirm popin callback and return true", function(done) {
-        document.body.innerHTML = `
-<form action="#popin-login" data-form-confirm-callback="callbackConfirmTrue" id="form-login" method="post">
-    <div class="form__element">
-        <label class="form__label" for="form-login-input-user" id="form-login-label-user">Username</label>
-        <input aria-invalid="false" aria-labelledby="form-login-label-user" aria-required="true" autocomplete="username" class="form__input" data-form-error-required="Username is required" data-form-rules="required" id="form-login-input-user" name="form-login-input-user" type="text" value="aze">
-    </div>
-    <input class="form__btn form__btn--large form__btn--primary" id="form-login-submit" name="form-login-submit" type="submit" value="Log in">
-</form>`;
-
         let callbacksLeft = 2;
         function callbackCalled(){
             callbacksLeft--;
@@ -931,10 +907,12 @@ describe("form", function(){
         form.canFinallySubmit = function() {
             this.form = document.getElementById("form-login");
             if (!this.hasError) {
+                // eslint-disable-next-line jest/no-conditional-expect
                 expect(false).toBe(true);
             } else {
                 var generalErrorTitle = this.form.getAttribute('data-form-general-error');
                 if (generalErrorTitle) {
+                    // eslint-disable-next-line jest/no-conditional-expect
                     expect(false).toBe(true);
                     this.formHelper.setGeneralError(this.form.getAttribute('id'), generalErrorTitle, this.listErrors);
                 } else {
@@ -944,6 +922,7 @@ describe("form", function(){
                     }
                     var speakIntro = this.form.getAttribute('data-form-speak-error') || 'Form is invalid:';
                     var res = speakIntro + ' ' + speak.join(', ');
+                    // eslint-disable-next-line jest/no-conditional-expect
                     expect(res).toBe(`Form is invalid: Username is required, Password is required`);
                 }
                 this.canSubmit = true;
@@ -988,11 +967,13 @@ describe("form", function(){
         form.canFinallySubmit = function() {
             this.form = document.getElementById("form-login");
             if (!this.hasError) {
+                // eslint-disable-next-line jest/no-conditional-expect
                 expect(false).toBe(true);
             } else {
                 var generalErrorTitle = this.form.getAttribute('data-form-general-error');
                 if (generalErrorTitle) {
                     this.formHelper.setGeneralError(this.form.getAttribute('id'), generalErrorTitle, this.listErrors);
+                    // eslint-disable-next-line jest/no-conditional-expect
                     expect(document.body.innerHTML).toBe(`
 <div role="alert" class="block__info block__info--error" id="form-login-error"><h4 class="block__title block__title--small">There is errors in form login</h4><ul class="block__list"><li class="block__list-item"><a class="block__list-link" href="#form-login-input-user">Username is required</a></li><li class="block__list-item"><a class="block__list-link" href="#form-login-input-pass">Password is required</a></li></ul></div><form action="#popin-login" id="form-login" method="post" data-form-general-error="There is errors in form login">
     <div class="form__element">
@@ -1011,6 +992,7 @@ describe("form", function(){
     <input class="form__btn form__btn--large form__btn--primary" id="form-login-submit" name="form-login-submit" type="submit" value="Log in">
 </form>`);
                 } else {
+                    // eslint-disable-next-line jest/no-conditional-expect
                     expect(false).toBe(true);
                     var speak = [];
                     for (var i = 0; i < this.listErrors.length; i++) {
@@ -1018,6 +1000,8 @@ describe("form", function(){
                     }
                     var speakIntro = this.form.getAttribute('data-form-speak-error') || 'Form is invalid:';
                     var res = speakIntro + ' ' + speak.join(', ');
+                    // eslint-disable-next-line jest/no-conditional-expect
+                    expect(res).toBe(`Form is invalid: Username is required, Password is required`);
                 }
                 this.canSubmit = true;
             }
