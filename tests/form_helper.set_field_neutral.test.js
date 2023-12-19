@@ -1,6 +1,8 @@
 describe("form_helper - setFieldNeutral", function(){
     beforeEach(function() {
         document.body.innerHTML = ``;
+        require("../src/rule");
+        require("../src/helper");
         require("../src/form");
     });
 
