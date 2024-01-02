@@ -1,6 +1,6 @@
 # form.js
 
-[![Test workflow](https://img.shields.io/github/actions/workflow/status/rancoud/form.js/test.yml?branch=main)](https://github.com/rancoud/form.js/actions/workflows/test.yml)
+[![Test workflow](https://img.shields.io/github/actions/workflow/status/rancoud/form.js/test.yml)](https://github.com/rancoud/form.js/actions/workflows/test.yml)
 [![Codecov](https://img.shields.io/codecov/c/github/rancoud/form.js?logo=codecov)](https://codecov.io/gh/rancoud/form.js)
 
 JS Form Manager take care of your forms by validating inputs, use feedbacks and add accessibility.  
