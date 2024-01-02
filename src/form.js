@@ -401,7 +401,7 @@ Form.prototype.showConfirm = function showConfirm() {
 };
 
 /**
- * ConfirmYes.
+ * Confirm Yes.
  *
  * @returns {undefined}
  */
@@ -410,7 +410,7 @@ Form.prototype.confirmYes = function confirmYes() {
 };
 
 /**
- * ConfirmYes.
+ * Confirm No.
  *
  * @returns {undefined}
  */
