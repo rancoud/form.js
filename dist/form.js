@@ -1336,7 +1336,7 @@
   };
 
   /**
-   * ConfirmYes.
+   * Confirm Yes.
    *
    * @returns {undefined}
    */
@@ -1345,7 +1345,7 @@
   };
 
   /**
-   * ConfirmYes.
+   * Confirm No.
    *
    * @returns {undefined}
    */
