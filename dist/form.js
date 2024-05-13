@@ -45,7 +45,7 @@
    * To change with register callback to avoid dynamic injection.
    *
    * @param {string} fn - function in string to fetch.?????
-   * @returns {undefined|Function}
+   * @returns {(Function|undefined)}
    */
   function getFunction(fn) {
     var scope = window;
@@ -53,15 +53,15 @@
     var idxScopes = 0;
     var maxFnParts = fnParts.length;
 
-    for (; idxScopes < maxFnParts - 1; idxScopes++) {
+    for (; idxScopes < maxFnParts - 1; ++idxScopes) {
       if (fnParts[idxScopes] === "window") {
         continue;
       }
 
       scope = scope[fnParts[idxScopes]];
 
-      if (scope === undefined) {
-        return;
+      if (typeof scope === "undefined") {
+        return undefined;
       }
     }
 
@@ -101,7 +101,6 @@
    * @param {Function}        callback        - a
    */
   Rule.prototype.min = function min(rules, fieldInspection, callback) {
-    // eslint-disable-next-line operator-assignment
     rules[1] = rules[1] >> 0;
 
     if (rules[1] === 0) {
@@ -124,7 +123,6 @@
    * @param {Function}        callback        - a
    */
   Rule.prototype.max = function max(rules, fieldInspection, callback) {
-    // eslint-disable-next-line operator-assignment
     rules[1] = rules[1] >> 0;
 
     if (rules[1] === 0) {
@@ -165,6 +163,7 @@
    */
   // eslint-disable-next-line camelcase
   Rule.prototype.equal_field = function equal_field(rules, fieldInspection, callback) {
+    /** @type {(HTMLElement|null)} */
     var elem = document.getElementById(rules[1]);
 
     if (!elem) {
@@ -204,11 +203,16 @@
    * @param {Function}        callbackFunction - a
    */
   Rule.prototype.callback = function callback(rules, fieldInspection, callbackFunction) {
-    var fn = null;
-    var args = [];
-    var parts = [];
+    /** @type {(Function|undefined)} */
+    var fn;
+    /** @type {any[]} */
+    var args;
+    /** @type {string[]} */
+    var parts;
+    /** @type {number} */
     var idxParts = 0;
-    var lenParts = 0;
+    /** @type {number} */
+    var lenParts;
 
     if (!rules[1]) {
       callbackFunction(new Error("Invalid parameter rule callback, callback " + rules[1] + " not found"));
@@ -239,7 +243,7 @@
       }
     }
 
-    // eslint-disable-next-line no-unused-expressions,prefer-spread
+    // eslint-disable-next-line no-unused-expressions
     !fn.apply(null, args);
   };
 
@@ -269,11 +273,16 @@
    * @param {Function}        callback        - a
    */
   Rule.prototype.checked = function checked(rules, fieldInspection, callback) {
-    var name = "";
-    var radios = [];
-    var isOneRadioChecked = false;
+    /** @type {(string|null)} */
+    var name;
+    /** @type {HTMLElement[]} */
+    var radios;
+    /** @type {boolean} */
+    var isOneRadioChecked;
+    /** @type {number} */
     var idxRadio = 0;
-    var lenRadio = 0;
+    /** @type {number} */
+    var lenRadio;
 
     if (fieldInspection.elemObj.getAttribute("type") === "radio") {
       name = fieldInspection.elemObj.getAttribute("name");
@@ -307,6 +316,9 @@
 
 
   /* global FieldInspection,Rule */
+  /** @type {number} */
+  var maxBouncing = 10;
+
   /**
    * Form Helper.
    *
@@ -320,11 +332,11 @@
    * Get HTML Element.
    *
    * @param {string} elemID - id
-   * @returns {Error|HTMLElement}
+   * @returns {(TypeError|Error|HTMLElement)}
    */
   function getHTMLElement(elemID) {
-    /** @type {HTMLElement} */
-    var htmlElement = null;
+    /** @type {(HTMLElement|null)} */
+    var htmlElement;
 
     if (typeof elemID !== "string") {
       return new TypeError("Invalid argument elemID, expect string, get " + typeof elemID);
@@ -380,10 +392,12 @@
   function setFeedbackCssClass(elemObj, cssClass) {
     /** @type {HTMLElement[]} */
     var feedbacks = findFeedbacks(elemObj);
+    /** @type {number} */
     var idxFeedbacks = 0;
+    /** @type {number} */
     var maxFeedbacks = feedbacks.length;
 
-    for (; idxFeedbacks < maxFeedbacks; idxFeedbacks++) {
+    for (; idxFeedbacks < maxFeedbacks; ++idxFeedbacks) {
       feedbacks[idxFeedbacks].classList.remove("form__feedback--error", "form__feedback--loading", "form__feedback--success");
       if (cssClass.length > 0) {
         feedbacks[idxFeedbacks].classList.add(cssClass);
@@ -417,16 +431,16 @@
    * @returns {HTMLFieldSetElement[]}
    */
   function findFeedbacks(elemObj) {
+    /** @type {number} */
     var maxParentBouncing = 0;
-
     /** @type {HTMLElement} */
     var currentObj = elemObj;
-
     /** @type {HTMLFieldSetElement[]} */
     var feedbacks = [];
-
-    var idxChilds = 0;
-    var maxChilds = 0;
+    /** @type {number} */
+    var idxChilds;
+    /** @type {number} */
+    var maxChilds;
 
     do {
       currentObj = currentObj.parentNode;
@@ -447,8 +461,8 @@
         break;
       }
 
-      maxParentBouncing += 1;
-    } while (maxParentBouncing < 10);
+      maxParentBouncing = maxParentBouncing + 1;
+    } while (maxParentBouncing < maxBouncing);
 
     return feedbacks;
   }
@@ -460,8 +474,8 @@
    * @returns {HTMLFieldSetElement}
    */
   function findParentFieldset(elemObj) {
+    /** @type {number} */
     var maxParentBouncing = 0;
-
     /** @type {HTMLElement} */
     var fieldsetObj = elemObj;
 
@@ -475,8 +489,8 @@
         return fieldsetObj;
       }
 
-      maxParentBouncing += 1;
-    } while (maxParentBouncing < 10);
+      maxParentBouncing = maxParentBouncing + 1;
+    } while (maxParentBouncing < maxBouncing);
 
     return null;
   }
@@ -488,8 +502,10 @@
    * @returns {string}
    */
   function getLabelErrorID(elemObj) {
-    var inputID = "";
-    var labelID = "";
+    /** @type {(string|null)} */
+    var inputID;
+    /** @type {(string|null)} */
+    var labelID;
 
     // eslint-disable-next-line no-negated-condition
     if (elemObj.getAttribute("type") !== "radio") {
@@ -510,19 +526,18 @@
    * @param {string}      errorMessage - message
    */
   function addLabelError(elemObj, errorMessage) {
+    /** @type {string} */
     var labelErrorID = getLabelErrorID(elemObj);
-
     /** @type {HTMLElement} */
     var labelObj = document.getElementById(labelErrorID);
-
     /** @type {HTMLLabelElement} */
-    var label = null;
-
-    var inputID = "";
-    var labelID = "";
-
+    var label;
+    /** @type {(string|null)} */
+    var inputID;
+    /** @type {string} */
+    var labelID;
     /** @type {HTMLElement} */
-    var fieldsetObj = null;
+    var fieldsetObj;
 
     if (labelObj) {
       labelObj.textContent = errorMessage;
@@ -562,8 +577,9 @@
    * @param {HTMLElement} elemObj - html element
    */
   function removeLabelError(elemObj) {
-    var labelID = "";
-
+    /** @type {string} */
+    var labelID;
+    /** @type {(HTMLElement|null)} */
     var labelObj = document.getElementById(getLabelErrorID(elemObj));
     if (!labelObj) {
       return;
@@ -581,7 +597,7 @@
 
   // region Set Field Neutral
   FormHelper.prototype.setFieldNeutral = function setFieldNeutral(elemID) {
-    /** @type {HTMLElement} */
+    /** @type {(TypeError|Error|HTMLElement)} */
     var elemObj = getHTMLElement(elemID);
     if (!(elemObj instanceof HTMLElement)) {
       return elemObj;
@@ -595,11 +611,14 @@
     setFieldsetCssClass(elemObj, "");
 
     removeLabelError(elemObj);
+
+    return undefined;
   };
   // endregion
 
   // region Set Field Valid
   FormHelper.prototype.setFieldValid = function setFieldValid(elemID) {
+    /** @type {(TypeError|Error|HTMLElement)} */
     var elemObj = getHTMLElement(elemID);
     if (!(elemObj instanceof HTMLElement)) {
       return elemObj;
@@ -613,11 +632,14 @@
     setFieldsetCssClass(elemObj, "form__fieldset--success");
 
     removeLabelError(elemObj);
+
+    return undefined;
   };
   // endregion
 
   // region Set Field Invalid
   FormHelper.prototype.setFieldInvalid = function setFieldInvalid(elemID, errorMessage) {
+    /** @type {(TypeError|Error|HTMLElement)} */
     var elemObj = getHTMLElement(elemID);
     if (!(elemObj instanceof HTMLElement)) {
       return elemObj;
@@ -639,11 +661,14 @@
     setFieldsetCssClass(elemObj, "form__fieldset--error");
 
     addLabelError(elemObj, errorMessage);
+
+    return undefined;
   };
   // endregion
 
   // region Set Field Loading
   FormHelper.prototype.setFieldLoading = function setFieldLoading(elemID) {
+    /** @type {(TypeError|Error|HTMLElement)} */
     var elemObj = getHTMLElement(elemID);
     if (!(elemObj instanceof HTMLElement)) {
       return elemObj;
@@ -655,18 +680,23 @@
     setFieldsetCssClass(elemObj, "");
 
     removeLabelError(elemObj);
+
+    return undefined;
   };
   // endregion
 
   // region Remove General Error
   // eslint-disable-next-line func-names
   FormHelper.prototype.removeGeneralError = function (elemID) {
+    /** @type {(TypeError|Error|HTMLElement)} */
     var elemObj = getHTMLElement(elemID);
     if (!(elemObj instanceof HTMLElement)) {
       return elemObj;
     }
 
     removeGeneralError(elemObj);
+
+    return undefined;
   };
 
   /**
@@ -675,6 +705,7 @@
    * @param {HTMLElement} elemObj - a
    */
   function removeGeneralError(elemObj) {
+    /** @type {Element} */
     var prevElem = elemObj.previousElementSibling;
 
     if (prevElem === null || prevElem.tagName !== "DIV" || prevElem.getAttribute("role") !== "alert") {
@@ -687,21 +718,17 @@
 
   // region Set General Error
   FormHelper.prototype.setGeneralError = function setGeneralError(elemID, title, listErrors) {
-    /** @type Number */
-    var countErrors = 0;
-
-    /** @type Error */
-    var err = null;
-
-    /** @type HTMLDivElement */
-    var generalInfo = null;
-
-    /** @type HTMLHeadingElement */
-    var generalTitle = null;
-
-    /** @type HTMLUListElement */
-    var listRoot = null;
-
+    /** @type {number} */
+    var countErrors;
+    /** @type {(Error|null)} */
+    var err;
+    /** @type {HTMLDivElement} */
+    var generalInfo;
+    /** @type {HTMLHeadingElement} */
+    var generalTitle;
+    /** @type {HTMLUListElement} */
+    var listRoot;
+    /** @type {(TypeError|Error|HTMLElement)} */
     var elemObj = getHTMLElement(elemID);
     if (!(elemObj instanceof HTMLElement)) {
       return elemObj;
@@ -739,18 +766,23 @@
     removeGeneralError(elemObj);
 
     elemObj.insertAdjacentElement("beforebegin", generalInfo);
+
+    return undefined;
   };
 
   /**
    * CheckErrorFormat.
    *
    * @param {Array} listErrors - a
-   * @returns {Error|null}
+   * @returns {(Error|null)}
    */
   function checkErrorFormat(listErrors) {
+    /** @type {number} */
     var idxError = 0;
+    /** @type {number} */
     var maxError = listErrors.length;
-    for (; idxError < maxError; idxError++) {
+
+    for (; idxError < maxError; ++idxError) {
       if (!listErrors[idxError] || typeof listErrors[idxError] !== "object") {
         return new Error("Invalid argument listErrors[" + idxError + "], expect Object");
       }
@@ -789,6 +821,7 @@
    * @returns {HTMLDivElement}
    */
   function createGeneralErrorDiv(elemID) {
+    /** @type {HTMLDivElement} */
     var generalInfo = document.createElement("div");
     generalInfo.setAttribute("role", "alert");
     generalInfo.classList.add("block__info", "block__info--error");
@@ -804,6 +837,7 @@
    * @returns {HTMLHeadingElement}
    */
   function createGeneralErrorTitle(title) {
+    /** @type {HTMLHeadingElement} */
     var titleH4 = document.createElement("h4");
     titleH4.classList.add("block__title", "block__title--small");
     titleH4.appendChild(document.createTextNode(title));
@@ -818,10 +852,15 @@
    * @returns {HTMLUListElement}
    */
   function createGeneralErrorItems(listErrors) {
+    /** @type {number} */
     var idxErrors = 0;
-    var max = 0;
-    var listItem = null;
-    var listItemLink = null;
+    /** @type {number} */
+    var max;
+    /** @type {HTMLLIElement} */
+    var listItem;
+    /** @type {HTMLAnchorElement} */
+    var listItemLink;
+    /** @type {HTMLUListElement} */
     var listRoot = document.createElement("ul");
     listRoot.classList.add("block__list");
 
@@ -849,17 +888,16 @@
   // endregion
 
   // region Try Field Is Invalid
+  /* eslint-disable consistent-return */
   FormHelper.prototype.tryFieldIsInvalid = function tryFieldIsInvalid(elemID, rulesText, callback) {
-    /** @type {HTMLElement} */
-    var elemObj = null;
-
-    var val = "";
-
+    /** @type {(TypeError|Error|HTMLElement)} */
+    var elemObj;
+    /** @type {string} */
+    var val;
     /** @type {string[]} */
-    var rulesTextParts = [];
-
+    var rulesTextParts;
     /** @type {FieldInspection} */
-    var fieldInspection = null;
+    var fieldInspection;
 
     if (typeof callback !== "function") {
       return new TypeError("Invalid argument callback, expect function, get " + typeof callback);
@@ -873,7 +911,7 @@
     if (typeof rulesText !== "string") {
       callback(new TypeError("Invalid argument rulesText, expect string, get " + typeof rulesText));
 
-      return;
+      return undefined;
     }
 
     val = elemObj.value.trim();
@@ -901,7 +939,7 @@
     if (fieldInspection.idxOptionsTextParts < fieldInspection.maxOptionsTextParts) {
       treatCurrentRule(fieldInspection, function cb(err) {
         if (err === null) {
-          fieldInspection.idxOptionsTextParts += 1;
+          fieldInspection.idxOptionsTextParts = fieldInspection.idxOptionsTextParts + 1;
           treatRulesLeft(fieldInspection, callback);
         } else {
           callback(err);
@@ -921,7 +959,6 @@
   function treatCurrentRule(fieldInspection, callback) {
     /** @type {string} */
     var currentRule = fieldInspection.rulesTextParts[fieldInspection.idxOptionsTextParts].split(":");
-
     /** @type {Rule} */
     var rule = new Rule();
 
@@ -946,22 +983,17 @@
   function Form(formElement) {
     /** @type {number} */
     var idxNodes = 0;
-
     /** @type {number} */
     var maxNodes = formElement.length;
-
     /** @type {string} */
-    var inputType = "";
+    var inputType;
 
     /** @type {boolean} */
     this.canSubmit = true;
-
     /** @type {FormHelper} */
     this.formHelper = new FormHelper();
-
     /** @type {object[]} */
     this.listErrors = [];
-
     /** @type {object} */
     this.currentCallbacks = {};
 
@@ -987,22 +1019,17 @@
    */
   function updateFakeFileLabel(elemObj) {
     /** @type {string} */
-    var text = "";
-
+    var text;
     /** @type {string[]} */
-    var filenameParts = [];
-
+    var filenameParts;
     /** @type {number} */
     var idxFiles = 0;
-
     /** @type {number} */
-    var maxFiles = 0;
-
+    var maxFiles;
     /** @type {number} */
     var idxChilds = 0;
-
     /** @type {number} */
-    var maxChilds = 0;
+    var maxChilds;
 
     if (elemObj.getAttribute("type") !== "file") {
       return;
@@ -1053,10 +1080,11 @@
    * OnSubmit Event.
    *
    * @param {Event} event - Event triggered.
-   * @returns {Error|undefined}
+   * @returns {(Error|undefined)}
    */
   Form.prototype.onSubmit = function onSubmit(event) {
-    var key = null;
+    /** @type {string} */
+    var key;
 
     event.preventDefault();
 
@@ -1078,6 +1106,8 @@
     this.listErrors = [];
 
     this.checkFormFieldsState(this.canFinallySubmit.bind(this));
+
+    return undefined;
   };
 
   /**
@@ -1089,7 +1119,7 @@
   Form.prototype.checkFormFieldsState = function checkFormFieldsState(callback) {
     if (this.currentIdxNodes < this.maxNodes) {
       this.checkFieldState(this.form[this.currentIdxNodes], true, null, function cb() {
-        this.currentIdxNodes += 1;
+        this.currentIdxNodes = this.currentIdxNodes + 1;
         this.checkFormFieldsState(callback);
       }.bind(this));
     } else {
@@ -1100,19 +1130,17 @@
   /**
    * Check Field State.
    *
-   * @param {HTMLElement} elemObj       - callback
-   * @param {boolean}     isSubmitEvent - callback
-   * @param {string|null} now           - callback
-   * @param {Function}    callback      - callback
+   * @param {HTMLElement}   elemObj       - callback
+   * @param {boolean}       isSubmitEvent - callback
+   * @param {(string|null)} now           - callback
+   * @param {Function}      callback      - callback
    * @returns {undefined}
    */
   Form.prototype.checkFieldState = function checkFieldState(elemObj, isSubmitEvent, now, callback) {
     /** @type {string} */
     var currentID = elemObj.getAttribute("id");
-
     /** @type {string} */
     var currentRules = elemObj.getAttribute("data-form-rules");
-
     /** @type {object} */
     var errorMessage = null;
 
@@ -1155,6 +1183,7 @@
    * @returns {undefined}
    */
   Form.prototype.setFieldState = function setFieldState(error, elemObj) {
+    /** @type {(string|null)} */
     var errorMessage = null;
 
     if (error === null) {
@@ -1185,20 +1214,16 @@
   /* istanbul ignore next */
   // This function is always mock in tests because of form variable
   Form.prototype.canFinallySubmit = function canFinallySubmit() {
-    /** @type {string} */
-    var generalErrorTitle = "";
-
+    /** @type {(string|null)} */
+    var generalErrorTitle;
     /** @type {string[]} */
-    var speak = [];
-
+    var speak;
     /** @type {number} */
     var idx = 0;
-
     /** @type {number} */
     var max = this.listErrors.length;
-
-    /** @type {string} */
-    var speakIntro = "";
+    /** @type {(string|null)} */
+    var speakIntro;
 
     if (this.hasError) {
       generalErrorTitle = this.form.getAttribute("data-form-general-error");
@@ -1237,9 +1262,8 @@
    * @returns {boolean}
    */
   Form.prototype.callConfirmCallback = function callConfirmCallback() {
-    /** @type {Function} */
-    var fn = null;
-
+    /** @type {(Function|undefined)} */
+    var fn;
     /** @type {string} */
     var confirmCallback = this.form.getAttribute("data-form-confirm-callback");
 
@@ -1272,23 +1296,18 @@
    * @returns {boolean}
    */
   Form.prototype.showConfirm = function showConfirm() {
-    /** @type {HTMLElement} */
-    var popinConfirmQuestion = null;
-
-    /** @type {HTMLElement} */
-    var popinConfirmContent = null;
-
-    /** @type {HTMLElement} */
-    var oldBtnYes = null;
-
-    /** @type {HTMLElement} */
-    var oldBtnNo = null;
-
-    /** @type {HTMLElement} */
-    var btnYes = null;
-
-    /** @type {HTMLElement} */
-    var btnNo = null;
+    /** @type {(HTMLElement|null)} */
+    var popinConfirmQuestion;
+    /** @type {(HTMLElement|null)} */
+    var popinConfirmContent;
+    /** @type {(HTMLElement|null)} */
+    var oldBtnYes;
+    /** @type {(HTMLElement|null)} */
+    var oldBtnNo;
+    /** @type {(HTMLElement|null)} */
+    var btnYes;
+    /** @type {(HTMLElement|null)} */
+    var btnNo;
 
     if (!this.form.hasAttribute("data-form-confirm")) {
       return false;
