@@ -9,22 +9,17 @@
 function Form(formElement) {
     /** @type {number} */
     var idxNodes = 0;
-
     /** @type {number} */
     var maxNodes = formElement.length;
-
     /** @type {string} */
-    var inputType = "";
+    var inputType;
 
     /** @type {boolean} */
     this.canSubmit = true;
-
     /** @type {FormHelper} */
     this.formHelper = new FormHelper();
-
     /** @type {object[]} */
     this.listErrors = [];
-
     /** @type {object} */
     this.currentCallbacks = {};
 
@@ -52,22 +47,17 @@ function Form(formElement) {
  */
 function updateFakeFileLabel(elemObj) {
     /** @type {string} */
-    var text = "";
-
+    var text;
     /** @type {string[]} */
-    var filenameParts = [];
-
+    var filenameParts;
     /** @type {number} */
     var idxFiles = 0;
-
     /** @type {number} */
-    var maxFiles = 0;
-
+    var maxFiles;
     /** @type {number} */
     var idxChilds = 0;
-
     /** @type {number} */
-    var maxChilds = 0;
+    var maxChilds;
 
     if (elemObj.getAttribute("type") !== "file") {
         return;
@@ -118,10 +108,11 @@ Form.prototype.onChange = function onChange(event) {
  * OnSubmit Event.
  *
  * @param {Event} event - Event triggered.
- * @returns {Error|undefined}
+ * @returns {(Error|undefined)}
  */
 Form.prototype.onSubmit = function onSubmit(event) {
-    var key = null;
+    /** @type {string} */
+    var key;
 
     event.preventDefault();
 
@@ -143,6 +134,8 @@ Form.prototype.onSubmit = function onSubmit(event) {
     this.listErrors = [];
 
     this.checkFormFieldsState(this.canFinallySubmit.bind(this));
+
+    return undefined;
 };
 
 /**
@@ -154,7 +147,7 @@ Form.prototype.onSubmit = function onSubmit(event) {
 Form.prototype.checkFormFieldsState = function checkFormFieldsState(callback) {
     if (this.currentIdxNodes < this.maxNodes) {
         this.checkFieldState(this.form[this.currentIdxNodes], true, null, function cb() {
-            this.currentIdxNodes += 1;
+            this.currentIdxNodes = this.currentIdxNodes + 1;
             this.checkFormFieldsState(callback);
         }.bind(this));
     } else {
@@ -165,19 +158,17 @@ Form.prototype.checkFormFieldsState = function checkFormFieldsState(callback) {
 /**
  * Check Field State.
  *
- * @param {HTMLElement} elemObj       - callback
- * @param {boolean}     isSubmitEvent - callback
- * @param {string|null} now           - callback
- * @param {Function}    callback      - callback
+ * @param {HTMLElement}   elemObj       - callback
+ * @param {boolean}       isSubmitEvent - callback
+ * @param {(string|null)} now           - callback
+ * @param {Function}      callback      - callback
  * @returns {undefined}
  */
 Form.prototype.checkFieldState = function checkFieldState(elemObj, isSubmitEvent, now, callback) {
     /** @type {string} */
     var currentID = elemObj.getAttribute("id");
-
     /** @type {string} */
     var currentRules = elemObj.getAttribute("data-form-rules");
-
     /** @type {object} */
     var errorMessage = null;
 
@@ -220,6 +211,7 @@ Form.prototype.checkFieldState = function checkFieldState(elemObj, isSubmitEvent
  * @returns {undefined}
  */
 Form.prototype.setFieldState = function setFieldState(error, elemObj) {
+    /** @type {(string|null)} */
     var errorMessage = null;
 
     if (error === null) {
@@ -250,20 +242,16 @@ Form.prototype.setFieldState = function setFieldState(error, elemObj) {
 /* istanbul ignore next */
 // This function is always mock in tests because of form variable
 Form.prototype.canFinallySubmit = function canFinallySubmit() {
-    /** @type {string} */
-    var generalErrorTitle = "";
-
+    /** @type {(string|null)} */
+    var generalErrorTitle;
     /** @type {string[]} */
-    var speak = [];
-
+    var speak;
     /** @type {number} */
     var idx = 0;
-
     /** @type {number} */
     var max = this.listErrors.length;
-
-    /** @type {string} */
-    var speakIntro = "";
+    /** @type {(string|null)} */
+    var speakIntro;
 
     if (this.hasError) {
         generalErrorTitle = this.form.getAttribute("data-form-general-error");
@@ -302,9 +290,8 @@ Form.prototype.canFinallySubmit = function canFinallySubmit() {
  * @returns {boolean}
  */
 Form.prototype.callConfirmCallback = function callConfirmCallback() {
-    /** @type {Function} */
-    var fn = null;
-
+    /** @type {(Function|undefined)} */
+    var fn;
     /** @type {string} */
     var confirmCallback = this.form.getAttribute("data-form-confirm-callback");
 
@@ -337,23 +324,18 @@ Form.prototype.callConfirmCallback = function callConfirmCallback() {
  * @returns {boolean}
  */
 Form.prototype.showConfirm = function showConfirm() {
-    /** @type {HTMLElement} */
-    var popinConfirmQuestion = null;
-
-    /** @type {HTMLElement} */
-    var popinConfirmContent = null;
-
-    /** @type {HTMLElement} */
-    var oldBtnYes = null;
-
-    /** @type {HTMLElement} */
-    var oldBtnNo = null;
-
-    /** @type {HTMLElement} */
-    var btnYes = null;
-
-    /** @type {HTMLElement} */
-    var btnNo = null;
+    /** @type {(HTMLElement|null)} */
+    var popinConfirmQuestion;
+    /** @type {(HTMLElement|null)} */
+    var popinConfirmContent;
+    /** @type {(HTMLElement|null)} */
+    var oldBtnYes;
+    /** @type {(HTMLElement|null)} */
+    var oldBtnNo;
+    /** @type {(HTMLElement|null)} */
+    var btnYes
+    /** @type {(HTMLElement|null)} */
+    var btnNo;
 
     if (!this.form.hasAttribute("data-form-confirm")) {
         return false;

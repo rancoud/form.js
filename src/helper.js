@@ -1,4 +1,7 @@
 /* global FieldInspection,Rule */
+/** @type {number} */
+var maxBouncing = 10;
+
 /**
  * Form Helper.
  *
@@ -12,11 +15,11 @@ function FormHelper() {}
  * Get HTML Element.
  *
  * @param {string} elemID - id
- * @returns {Error|HTMLElement}
+ * @returns {(TypeError|Error|HTMLElement)}
  */
 function getHTMLElement(elemID) {
-    /** @type {HTMLElement} */
-    var htmlElement = null;
+    /** @type {(HTMLElement|null)} */
+    var htmlElement;
 
     if (typeof elemID !== "string") {
         return new TypeError("Invalid argument elemID, expect string, get " + typeof elemID);
@@ -72,10 +75,12 @@ function setContainerCssClass(container, cssClass) {
 function setFeedbackCssClass(elemObj, cssClass) {
     /** @type {HTMLElement[]} */
     var feedbacks = findFeedbacks(elemObj);
+    /** @type {number} */
     var idxFeedbacks = 0;
+    /** @type {number} */
     var maxFeedbacks = feedbacks.length;
 
-    for (; idxFeedbacks < maxFeedbacks; idxFeedbacks++) {
+    for (; idxFeedbacks < maxFeedbacks; ++idxFeedbacks) {
         feedbacks[idxFeedbacks].classList.remove("form__feedback--error", "form__feedback--loading", "form__feedback--success");
         if (cssClass.length > 0) {
             feedbacks[idxFeedbacks].classList.add(cssClass);
@@ -109,16 +114,16 @@ function setFieldsetCssClass(elemObj, cssClass) {
  * @returns {HTMLFieldSetElement[]}
  */
 function findFeedbacks(elemObj) {
+    /** @type {number} */
     var maxParentBouncing = 0;
-
     /** @type {HTMLElement} */
     var currentObj = elemObj;
-
     /** @type {HTMLFieldSetElement[]} */
     var feedbacks = [];
-
-    var idxChilds = 0;
-    var maxChilds = 0;
+    /** @type {number} */
+    var idxChilds;
+    /** @type {number} */
+    var maxChilds;
 
     do {
         currentObj = currentObj.parentNode;
@@ -139,8 +144,8 @@ function findFeedbacks(elemObj) {
             break;
         }
 
-        maxParentBouncing += 1;
-    } while (maxParentBouncing < 10);
+        maxParentBouncing = maxParentBouncing + 1;
+    } while (maxParentBouncing < maxBouncing);
 
     return feedbacks;
 }
@@ -152,8 +157,8 @@ function findFeedbacks(elemObj) {
  * @returns {HTMLFieldSetElement}
  */
 function findParentFieldset(elemObj) {
+    /** @type {number} */
     var maxParentBouncing = 0;
-
     /** @type {HTMLElement} */
     var fieldsetObj = elemObj;
 
@@ -167,8 +172,8 @@ function findParentFieldset(elemObj) {
             return fieldsetObj;
         }
 
-        maxParentBouncing += 1;
-    } while (maxParentBouncing < 10);
+        maxParentBouncing = maxParentBouncing + 1;
+    } while (maxParentBouncing < maxBouncing);
 
     return null;
 }
@@ -180,8 +185,10 @@ function findParentFieldset(elemObj) {
  * @returns {string}
  */
 function getLabelErrorID(elemObj) {
-    var inputID = "";
-    var labelID = "";
+    /** @type {(string|null)} */
+    var inputID;
+    /** @type {(string|null)} */
+    var labelID;
 
     // eslint-disable-next-line no-negated-condition
     if (elemObj.getAttribute("type") !== "radio") {
@@ -202,19 +209,18 @@ function getLabelErrorID(elemObj) {
  * @param {string}      errorMessage - message
  */
 function addLabelError(elemObj, errorMessage) {
+    /** @type {string} */
     var labelErrorID = getLabelErrorID(elemObj);
-
     /** @type {HTMLElement} */
     var labelObj = document.getElementById(labelErrorID);
-
     /** @type {HTMLLabelElement} */
-    var label = null;
-
-    var inputID = "";
-    var labelID = "";
-
+    var label;
+    /** @type {(string|null)} */
+    var inputID;
+    /** @type {string} */
+    var labelID;
     /** @type {HTMLElement} */
-    var fieldsetObj = null;
+    var fieldsetObj;
 
     if (labelObj) {
         labelObj.textContent = errorMessage;
@@ -254,8 +260,9 @@ function addLabelError(elemObj, errorMessage) {
  * @param {HTMLElement} elemObj - html element
  */
 function removeLabelError(elemObj) {
-    var labelID = "";
-
+    /** @type {string} */
+    var labelID;
+    /** @type {(HTMLElement|null)} */
     var labelObj = document.getElementById(getLabelErrorID(elemObj));
     if (!labelObj) {
         return;
@@ -273,7 +280,7 @@ function removeLabelError(elemObj) {
 
 // region Set Field Neutral
 FormHelper.prototype.setFieldNeutral = function setFieldNeutral(elemID) {
-    /** @type {HTMLElement} */
+    /** @type {(TypeError|Error|HTMLElement)} */
     var elemObj = getHTMLElement(elemID);
     if (!(elemObj instanceof HTMLElement)) {
         return elemObj;
@@ -287,11 +294,14 @@ FormHelper.prototype.setFieldNeutral = function setFieldNeutral(elemID) {
     setFieldsetCssClass(elemObj, "");
 
     removeLabelError(elemObj);
+
+    return undefined;
 };
 // endregion
 
 // region Set Field Valid
 FormHelper.prototype.setFieldValid = function setFieldValid(elemID) {
+    /** @type {(TypeError|Error|HTMLElement)} */
     var elemObj = getHTMLElement(elemID);
     if (!(elemObj instanceof HTMLElement)) {
         return elemObj;
@@ -305,11 +315,14 @@ FormHelper.prototype.setFieldValid = function setFieldValid(elemID) {
     setFieldsetCssClass(elemObj, "form__fieldset--success");
 
     removeLabelError(elemObj);
+
+    return undefined;
 };
 // endregion
 
 // region Set Field Invalid
 FormHelper.prototype.setFieldInvalid = function setFieldInvalid(elemID, errorMessage) {
+    /** @type {(TypeError|Error|HTMLElement)} */
     var elemObj = getHTMLElement(elemID);
     if (!(elemObj instanceof HTMLElement)) {
         return elemObj;
@@ -331,11 +344,14 @@ FormHelper.prototype.setFieldInvalid = function setFieldInvalid(elemID, errorMes
     setFieldsetCssClass(elemObj, "form__fieldset--error");
 
     addLabelError(elemObj, errorMessage);
+
+    return undefined;
 };
 // endregion
 
 // region Set Field Loading
 FormHelper.prototype.setFieldLoading = function setFieldLoading(elemID) {
+    /** @type {(TypeError|Error|HTMLElement)} */
     var elemObj = getHTMLElement(elemID);
     if (!(elemObj instanceof HTMLElement)) {
         return elemObj;
@@ -347,18 +363,23 @@ FormHelper.prototype.setFieldLoading = function setFieldLoading(elemID) {
     setFieldsetCssClass(elemObj, "");
 
     removeLabelError(elemObj);
+
+    return undefined;
 };
 // endregion
 
 // region Remove General Error
 // eslint-disable-next-line func-names
 FormHelper.prototype.removeGeneralError = function (elemID) {
+    /** @type {(TypeError|Error|HTMLElement)} */
     var elemObj = getHTMLElement(elemID);
     if (!(elemObj instanceof HTMLElement)) {
         return elemObj;
     }
 
     removeGeneralError(elemObj);
+
+    return undefined;
 };
 
 /**
@@ -367,6 +388,7 @@ FormHelper.prototype.removeGeneralError = function (elemID) {
  * @param {HTMLElement} elemObj - a
  */
 function removeGeneralError(elemObj) {
+    /** @type {Element} */
     var prevElem = elemObj.previousElementSibling;
 
     if (prevElem === null || prevElem.tagName !== "DIV" || prevElem.getAttribute("role") !== "alert") {
@@ -379,21 +401,17 @@ function removeGeneralError(elemObj) {
 
 // region Set General Error
 FormHelper.prototype.setGeneralError = function setGeneralError(elemID, title, listErrors) {
-    /** @type Number */
-    var countErrors = 0;
-
-    /** @type Error */
-    var err = null;
-
-    /** @type HTMLDivElement */
-    var generalInfo = null;
-
-    /** @type HTMLHeadingElement */
-    var generalTitle = null;
-
-    /** @type HTMLUListElement */
-    var listRoot = null;
-
+    /** @type {number} */
+    var countErrors;
+    /** @type {(Error|null)} */
+    var err;
+    /** @type {HTMLDivElement} */
+    var generalInfo;
+    /** @type {HTMLHeadingElement} */
+    var generalTitle;
+    /** @type {HTMLUListElement} */
+    var listRoot;
+    /** @type {(TypeError|Error|HTMLElement)} */
     var elemObj = getHTMLElement(elemID);
     if (!(elemObj instanceof HTMLElement)) {
         return elemObj;
@@ -431,18 +449,23 @@ FormHelper.prototype.setGeneralError = function setGeneralError(elemID, title, l
     removeGeneralError(elemObj);
 
     elemObj.insertAdjacentElement("beforebegin", generalInfo);
+
+    return undefined;
 };
 
 /**
  * CheckErrorFormat.
  *
  * @param {Array} listErrors - a
- * @returns {Error|null}
+ * @returns {(Error|null)}
  */
 function checkErrorFormat(listErrors) {
+    /** @type {number} */
     var idxError = 0;
+    /** @type {number} */
     var maxError = listErrors.length;
-    for (; idxError < maxError; idxError++) {
+
+    for (; idxError < maxError; ++idxError) {
         if (!listErrors[idxError] || typeof listErrors[idxError] !== "object") {
             return new Error("Invalid argument listErrors[" + idxError + "], expect Object");
         }
@@ -481,6 +504,7 @@ function checkErrorFormat(listErrors) {
  * @returns {HTMLDivElement}
  */
 function createGeneralErrorDiv(elemID) {
+    /** @type {HTMLDivElement} */
     var generalInfo = document.createElement("div");
     generalInfo.setAttribute("role", "alert");
     generalInfo.classList.add("block__info", "block__info--error");
@@ -496,6 +520,7 @@ function createGeneralErrorDiv(elemID) {
  * @returns {HTMLHeadingElement}
  */
 function createGeneralErrorTitle(title) {
+    /** @type {HTMLHeadingElement} */
     var titleH4 = document.createElement("h4");
     titleH4.classList.add("block__title", "block__title--small");
     titleH4.appendChild(document.createTextNode(title));
@@ -510,10 +535,15 @@ function createGeneralErrorTitle(title) {
  * @returns {HTMLUListElement}
  */
 function createGeneralErrorItems(listErrors) {
+    /** @type {number} */
     var idxErrors = 0;
-    var max = 0;
-    var listItem = null;
-    var listItemLink = null;
+    /** @type {number} */
+    var max;
+    /** @type {HTMLLIElement} */
+    var listItem;
+    /** @type {HTMLAnchorElement} */
+    var listItemLink;
+    /** @type {HTMLUListElement} */
     var listRoot = document.createElement("ul");
     listRoot.classList.add("block__list");
 
@@ -541,17 +571,16 @@ function createGeneralErrorItems(listErrors) {
 // endregion
 
 // region Try Field Is Invalid
+/* eslint-disable consistent-return */
 FormHelper.prototype.tryFieldIsInvalid = function tryFieldIsInvalid(elemID, rulesText, callback) {
-    /** @type {HTMLElement} */
-    var elemObj = null;
-
-    var val = "";
-
+    /** @type {(TypeError|Error|HTMLElement)} */
+    var elemObj;
+    /** @type {string} */
+    var val;
     /** @type {string[]} */
-    var rulesTextParts = [];
-
+    var rulesTextParts;
     /** @type {FieldInspection} */
-    var fieldInspection = null;
+    var fieldInspection;
 
     if (typeof callback !== "function") {
         return new TypeError("Invalid argument callback, expect function, get " + typeof callback);
@@ -565,7 +594,7 @@ FormHelper.prototype.tryFieldIsInvalid = function tryFieldIsInvalid(elemID, rule
     if (typeof rulesText !== "string") {
         callback(new TypeError("Invalid argument rulesText, expect string, get " + typeof rulesText));
 
-        return;
+        return undefined;
     }
 
     val = elemObj.value.trim();
@@ -593,7 +622,7 @@ function treatRulesLeft(fieldInspection, callback) {
     if (fieldInspection.idxOptionsTextParts < fieldInspection.maxOptionsTextParts) {
         treatCurrentRule(fieldInspection, function cb(err) {
             if (err === null) {
-                fieldInspection.idxOptionsTextParts += 1;
+                fieldInspection.idxOptionsTextParts = fieldInspection.idxOptionsTextParts + 1;
                 treatRulesLeft(fieldInspection, callback);
             } else {
                 callback(err);
@@ -613,7 +642,6 @@ function treatRulesLeft(fieldInspection, callback) {
 function treatCurrentRule(fieldInspection, callback) {
     /** @type {string} */
     var currentRule = fieldInspection.rulesTextParts[fieldInspection.idxOptionsTextParts].split(":");
-
     /** @type {Rule} */
     var rule = new Rule();
 

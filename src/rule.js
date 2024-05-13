@@ -4,7 +4,7 @@
  * To change with register callback to avoid dynamic injection.
  *
  * @param {string} fn - function in string to fetch.?????
- * @returns {undefined|Function}
+ * @returns {(Function|undefined)}
  */
 function getFunction(fn) {
     var scope = window;
@@ -12,15 +12,15 @@ function getFunction(fn) {
     var idxScopes = 0;
     var maxFnParts = fnParts.length;
 
-    for (; idxScopes < maxFnParts - 1; idxScopes++) {
+    for (; idxScopes < maxFnParts - 1; ++idxScopes) {
         if (fnParts[idxScopes] === "window") {
             continue;
         }
 
         scope = scope[fnParts[idxScopes]];
 
-        if (scope === undefined) {
-            return;
+        if (typeof scope === "undefined") {
+            return undefined;
         }
     }
 
@@ -60,7 +60,6 @@ Rule.prototype.required = function required(rules, fieldInspection, callback) {
  * @param {Function}        callback        - a
  */
 Rule.prototype.min = function min(rules, fieldInspection, callback) {
-    // eslint-disable-next-line operator-assignment
     rules[1] = rules[1] >> 0;
 
     if (rules[1] === 0) {
@@ -83,7 +82,6 @@ Rule.prototype.min = function min(rules, fieldInspection, callback) {
  * @param {Function}        callback        - a
  */
 Rule.prototype.max = function max(rules, fieldInspection, callback) {
-    // eslint-disable-next-line operator-assignment
     rules[1] = rules[1] >> 0;
 
     if (rules[1] === 0) {
@@ -124,6 +122,7 @@ Rule.prototype.email = function email(rules, fieldInspection, callback) {
  */
 // eslint-disable-next-line camelcase
 Rule.prototype.equal_field = function equal_field(rules, fieldInspection, callback) {
+    /** @type {(HTMLElement|null)} */
     var elem = document.getElementById(rules[1]);
 
     if (!elem) {
@@ -163,11 +162,16 @@ Rule.prototype.aria_invalid = function aria_invalid(rules, fieldInspection, call
  * @param {Function}        callbackFunction - a
  */
 Rule.prototype.callback = function callback(rules, fieldInspection, callbackFunction) {
-    var fn = null;
-    var args = [];
-    var parts = [];
+    /** @type {(Function|undefined)} */
+    var fn;
+    /** @type {any[]} */
+    var args;
+    /** @type {string[]} */
+    var parts;
+    /** @type {number} */
     var idxParts = 0;
-    var lenParts = 0;
+    /** @type {number} */
+    var lenParts;
 
     if (!rules[1]) {
         callbackFunction(new Error("Invalid parameter rule callback, callback " + rules[1] + " not found"));
@@ -198,7 +202,7 @@ Rule.prototype.callback = function callback(rules, fieldInspection, callbackFunc
         }
     }
 
-    // eslint-disable-next-line no-unused-expressions,prefer-spread
+    // eslint-disable-next-line no-unused-expressions
     !fn.apply(null, args);
 };
 
@@ -228,11 +232,16 @@ Rule.prototype.regex = function regex(rules, fieldInspection, callback) {
  * @param {Function}        callback        - a
  */
 Rule.prototype.checked = function checked(rules, fieldInspection, callback) {
-    var name = "";
-    var radios = [];
-    var isOneRadioChecked = false;
+    /** @type {(string|null)} */
+    var name;
+    /** @type {HTMLElement[]} */
+    var radios;
+    /** @type {boolean} */
+    var isOneRadioChecked;
+    /** @type {number} */
     var idxRadio = 0;
-    var lenRadio = 0;
+    /** @type {number} */
+    var lenRadio;
 
     if (fieldInspection.elemObj.getAttribute("type") === "radio") {
         name = fieldInspection.elemObj.getAttribute("name");
