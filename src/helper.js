@@ -654,4 +654,4 @@ function treatCurrentRule(fieldInspection, callback) {
 }
 // endregion
 
-window.FormHelper = FormHelper; /* BUILD REMOVE LINE */
+window.FormHelper = FormHelper; // BUILD REMOVE LINE

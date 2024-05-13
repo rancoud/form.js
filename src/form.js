@@ -27,7 +27,7 @@ function Form(formElement) {
 
     /* istanbul ignore next */
     // eslint-disable-next-line no-constant-condition
-    if (false) { /* BUILD REMOVE LINE - dumb condition is necessary for avoiding fails unit test */
+    if (false) { // BUILD REMOVE LINE - dumb condition is necessary for avoiding fails unit test
         for (; idxNodes < maxNodes; ++idxNodes) {
             inputType = formElement[idxNodes].getAttribute("type");
             if (inputType === "checkbox" || inputType === "radio" || inputType === "file") {
@@ -36,7 +36,7 @@ function Form(formElement) {
                 formElement[idxNodes].addEventListener("blur", this.onChange.bind(this), {passive: false});
             }
         }
-    } /* BUILD REMOVE LINE */
+    } // BUILD REMOVE LINE
 }
 
 /**

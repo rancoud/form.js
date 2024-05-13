@@ -273,5 +273,5 @@ Rule.prototype.checked = function checked(rules, fieldInspection, callback) {
     }
 };
 
-window.Rule = Rule; /* BUILD REMOVE LINE */
-window.getFunction = getFunction; /* BUILD REMOVE LINE */
+window.Rule = Rule; // BUILD REMOVE LINE
+window.getFunction = getFunction; // BUILD REMOVE LINE
