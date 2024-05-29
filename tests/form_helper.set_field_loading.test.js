@@ -1,4 +1,4 @@
-describe("form_helper - setFieldLoading", function(){
+describe("form_helper - setFieldLoading", function() {
     beforeEach(function() {
         document.body.innerHTML = ``;
         require("../src/rule");

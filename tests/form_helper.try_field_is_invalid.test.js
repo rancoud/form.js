@@ -1,39 +1,39 @@
 window.fnTrue = function fnTrue(elemObj, callback) {
     setTimeout(function() {
-        callback(elemObj && elemObj.getAttribute('id') === 'form-input');
-    },100);
+        callback(elemObj && elemObj.getAttribute("id") === "form-input");
+    }, 100);
 };
 
 window.fnTrueWithArg = function fnTrueWithArg(elemObj, callback, a) {
     setTimeout(function() {
-        callback((elemObj && elemObj.getAttribute('id') === 'form-input') && a === "1");
-    },100);
+        callback((elemObj && elemObj.getAttribute("id") === "form-input") && a === "1");
+    }, 100);
 };
 
 window.fnTrueWithTwoArgs = function fnTrueWithArg(elemObj, callback, a, b) {
     setTimeout(function() {
-        callback((elemObj && elemObj.getAttribute('id') === 'form-input') && a === "1" && b === "5");
-    },100);
+        callback((elemObj && elemObj.getAttribute("id") === "form-input") && a === "1" && b === "5");
+    }, 100);
 };
 
 window.MyNamespace = {};
 window.MyNamespace.MyFunc = function MyFunc(elemObj, callback) {
     setTimeout(function() {
         window.fnTrue(elemObj, callback);
-    },100);
+    }, 100);
 };
 window.fnSpecial = function fnTrueWithArg(elemObj, callback, a, b) {
     setTimeout(function() {
-        callback((elemObj && elemObj.getAttribute('id') === 'form-input') && a === "spe" && b === "cial");
-    },100);
+        callback((elemObj && elemObj.getAttribute("id") === "form-input") && a === "spe" && b === "cial");
+    }, 100);
 };
 window.fnFalse = function fnTrue(elemObj, callback) {
     setTimeout(function() {
         callback(false);
-    },10);
+    }, 10);
 };
 
-describe("form_helper - tryFieldIsInvalid", function(){
+describe("form_helper - tryFieldIsInvalid", function() {
     beforeEach(function() {
         document.body.innerHTML = ``;
         require("../src/rule");
@@ -96,7 +96,7 @@ describe("form_helper - tryFieldIsInvalid", function(){
         let err;
 
         let callbacksLeft = 10;
-        function callbackCalled(){
+        function callbackCalled() {
             callbacksLeft--;
             if (callbacksLeft === 0) {
                 done();
@@ -311,7 +311,7 @@ describe("form_helper - tryFieldIsInvalid", function(){
         document.body.innerHTML = `<input id="form-input" type="text">`;
 
         formHelper.tryFieldIsInvalid("form-input", "required", function(ruleFailed) {
-            expect(ruleFailed).toBe('required');
+            expect(ruleFailed).toBe("required");
             callbackCalled();
         });
     });
@@ -377,7 +377,7 @@ describe("form_helper - tryFieldIsInvalid", function(){
         document.body.innerHTML = `<input id="form-input" type="text" value="abc">`;
 
         formHelper.tryFieldIsInvalid("form-input", "min:4", function(ruleFailed) {
-            expect(ruleFailed).toBe('min');
+            expect(ruleFailed).toBe("min");
             callbackCalled();
         });
     });
@@ -471,7 +471,6 @@ describe("form_helper - tryFieldIsInvalid", function(){
             callbackCalled();
         });
 
-
         formHelper.tryFieldIsInvalid("form-input", "max:4", function(ruleFailed) {
             expect(ruleFailed).toBe(null);
             callbackCalled();
@@ -494,7 +493,7 @@ describe("form_helper - tryFieldIsInvalid", function(){
         document.body.innerHTML = `<input id="form-input" type="text">`;
 
         formHelper.tryFieldIsInvalid("form-input", "email", function(ruleFailed) {
-            expect(ruleFailed).toBe('email');
+            expect(ruleFailed).toBe("email");
             callbackCalled();
         });
     });
@@ -513,7 +512,7 @@ describe("form_helper - tryFieldIsInvalid", function(){
         document.body.innerHTML = `<input id="form-input" type="text" value="a">`;
 
         formHelper.tryFieldIsInvalid("form-input", "email", function(ruleFailed) {
-            expect(ruleFailed).toBe('email');
+            expect(ruleFailed).toBe("email");
             callbackCalled();
         });
     });
@@ -532,7 +531,7 @@ describe("form_helper - tryFieldIsInvalid", function(){
         document.body.innerHTML = `<input id="form-input" type="text" value="a@">`;
 
         formHelper.tryFieldIsInvalid("form-input", "email", function(ruleFailed) {
-            expect(ruleFailed).toBe('email');
+            expect(ruleFailed).toBe("email");
             callbackCalled();
         });
     });
@@ -551,7 +550,7 @@ describe("form_helper - tryFieldIsInvalid", function(){
         document.body.innerHTML = `<input id="form-input" type="text" value="@a">`;
 
         formHelper.tryFieldIsInvalid("form-input", "email", function(ruleFailed) {
-            expect(ruleFailed).toBe('email');
+            expect(ruleFailed).toBe("email");
             callbackCalled();
         });
     });
@@ -617,7 +616,7 @@ describe("form_helper - tryFieldIsInvalid", function(){
         document.body.innerHTML = `<input id="form-input" type="text" value="a"><input id="a" type="text" value="b">`;
 
         formHelper.tryFieldIsInvalid("form-input", "equal_field:a", function(ruleFailed) {
-            expect(ruleFailed).toBe('equal_field');
+            expect(ruleFailed).toBe("equal_field");
             callbackCalled();
         });
     });
@@ -763,7 +762,7 @@ describe("form_helper - tryFieldIsInvalid", function(){
         document.body.innerHTML = `<input aria-invalid="true" id="form-input" type="text">`;
 
         formHelper.tryFieldIsInvalid("form-input", "aria_invalid", function(ruleFailed) {
-            expect(ruleFailed).toBe('aria_invalid');
+            expect(ruleFailed).toBe("aria_invalid");
             callbackCalled();
         });
     });

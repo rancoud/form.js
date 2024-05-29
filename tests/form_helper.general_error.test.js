@@ -1,4 +1,4 @@
-describe("form_helper - GeneralError", function(){
+describe("form_helper - GeneralError", function() {
     beforeEach(function() {
         document.body.innerHTML = ``;
         require("../src/rule");
@@ -275,32 +275,32 @@ describe("form_helper - GeneralError", function(){
         expect(err).toBeInstanceOf(Error);
         expect(err.message).toBe("Invalid argument listErrors[0].id, expect string");
 
-        listErrors = [{"id": 1}];
+        listErrors = [{id: 1}];
         err = formHelper.setGeneralError("general-feedback", "There are 1 error in this form", listErrors);
         expect(err).toBeInstanceOf(Error);
         expect(err.message).toBe("Invalid argument listErrors[0].id, expect string");
 
-        listErrors = [{"id": "1"}];
+        listErrors = [{id: "1"}];
         err = formHelper.setGeneralError("general-feedback", "There are 1 error in this form", listErrors);
         expect(err).toBeInstanceOf(Error);
         expect(err.message).toBe("Invalid argument listErrors[0].message, expect string");
 
-        listErrors = [{"id": ""}];
+        listErrors = [{id: ""}];
         err = formHelper.setGeneralError("general-feedback", "There are 1 error in this form", listErrors);
         expect(err).toBeInstanceOf(Error);
         expect(err.message).toBe("Invalid argument listErrors[0].id is empty");
 
-        listErrors = [{"id": "1", "message": 1}];
+        listErrors = [{id: "1", message: 1}];
         err = formHelper.setGeneralError("general-feedback", "There are 1 error in this form", listErrors);
         expect(err).toBeInstanceOf(Error);
         expect(err.message).toBe("Invalid argument listErrors[0].message, expect string");
 
-        listErrors = [{"id": "1", "message": ""}];
+        listErrors = [{id: "1", message: ""}];
         err = formHelper.setGeneralError("general-feedback", "There are 1 error in this form", listErrors);
         expect(err).toBeInstanceOf(Error);
         expect(err.message).toBe("Invalid argument listErrors[0].message is empty");
 
-        listErrors = [{"id": "1", "message": "1", "more": 1}];
+        listErrors = [{id: "1", message: "1", more: 1}];
         err = formHelper.setGeneralError("general-feedback", "There are 1 error in this form", listErrors);
         expect(err).toBeInstanceOf(Error);
         expect(err.message).toBe("Invalid argument listErrors[0].more, expect string");
@@ -312,7 +312,7 @@ describe("form_helper - GeneralError", function(){
         const formHelper = new window.FormHelper();
         let err;
 
-        err = formHelper.setGeneralError("azerty", "ytreza", [{"id": "a", "message": "a"}]);
+        err = formHelper.setGeneralError("azerty", "ytreza", [{id: "a", message: "a"}]);
         expect(err).toBeInstanceOf(Error);
         expect(err.message).toBe("DOM element azerty not found");
 
@@ -325,17 +325,17 @@ describe("form_helper - GeneralError", function(){
 
         document.body.innerHTML = `<form id="form-action"></form>`;
 
-        err = formHelper.setGeneralError("form-action", "There are 1 error in this form", [{"id": "a", "message": "b"}]);
+        err = formHelper.setGeneralError("form-action", "There are 1 error in this form", [{id: "a", message: "b"}]);
         expect(err).toBeUndefined();
 
         expect(document.body.innerHTML).toBe(`<div role="alert" class="block__info block__info--error" id="form-action-error"><h4 class="block__title block__title--small">There are 1 error in this form</h4><ul class="block__list"><li class="block__list-item"><a class="block__list-link" href="#a">b</a></li></ul></div><form id="form-action"></form>`);
 
-        err = formHelper.setGeneralError("form-action", "There are 1 error in this form", [{"id": "b", "message": "c"}]);
+        err = formHelper.setGeneralError("form-action", "There are 1 error in this form", [{id: "b", message: "c"}]);
         expect(err).toBeUndefined();
 
         expect(document.body.innerHTML).toBe(`<div role="alert" class="block__info block__info--error" id="form-action-error"><h4 class="block__title block__title--small">There are 1 error in this form</h4><ul class="block__list"><li class="block__list-item"><a class="block__list-link" href="#b">c</a></li></ul></div><form id="form-action"></form>`);
 
-        err = formHelper.setGeneralError("form-action", "There are 2 errors in this form", [{"id": "c", "message": "d"},{"id": "<img src=\"x\" onerror='alert(1)'>", "message": "<img src='x' onerror='alert(1)'>", "more": "<img src='x' onerror='alert(1)'>"}]);
+        err = formHelper.setGeneralError("form-action", "There are 2 errors in this form", [{id: "c", message: "d"}, {id: "<img src=\"x\" onerror='alert(1)'>", message: "<img src='x' onerror='alert(1)'>", more: "<img src='x' onerror='alert(1)'>"}]);
         expect(err).toBeUndefined();
 
         expect(document.body.innerHTML).toBe(`<div role="alert" class="block__info block__info--error" id="form-action-error"><h4 class="block__title block__title--small">There are 2 errors in this form</h4><ul class="block__list"><li class="block__list-item"><a class="block__list-link" href="#c">d</a></li><li class="block__list-item"><a class="block__list-link" href="#<img src=&quot;x&quot; onerror='alert(1)'>">&lt;img src='x' onerror='alert(1)'&gt;</a><br>&lt;img src='x' onerror='alert(1)'&gt;</li></ul></div><form id="form-action"></form>`);
