@@ -1,4 +1,4 @@
-describe("form_helper - setFieldInvalid", function(){
+describe("form_helper - setFieldInvalid", function() {
     beforeEach(function() {
         document.body.innerHTML = ``;
         require("../src/rule");

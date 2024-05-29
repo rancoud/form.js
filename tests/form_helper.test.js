@@ -1,4 +1,4 @@
-describe("form_helper", function(){
+describe("form_helper", function() {
     beforeEach(function() {
         document.body.innerHTML = ``;
         require("../src/rule");

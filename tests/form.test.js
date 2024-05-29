@@ -1,10 +1,10 @@
 jest.useFakeTimers();
 
 window.wait10ms = function fnTrue(elemObj, callback) {
-    var result = elemObj.getAttribute('value') === "aze";
+    var result = elemObj.getAttribute("value") === "aze";
     setTimeout(function() {
         callback(result);
-    },10);
+    }, 10);
 };
 
 window.callbackConfirmTrue = function callbackConfirm(formObj, callback) {
@@ -15,7 +15,7 @@ window.callbackConfirmFalse = function callbackConfirm(formObj, callback) {
     callback(false);
 };
 
-describe("form", function(){
+describe("form", function() {
     beforeEach(function() {
         document.body.innerHTML = `
 <form action="#popin-login" id="form-login" method="post">
@@ -56,18 +56,18 @@ describe("form", function(){
     <input class="form__btn form__btn--large form__btn--primary" id="form-login-submit" name="form-login-submit" type="submit" value="Log in">
 </form>`;
 
-        const form = new window.Form(document.getElementById('form-login'));
+        const form = new window.Form(document.getElementById("form-login"));
 
         let fakeEvent = {
-            "preventDefault": function() {},
-            "currentTarget": document.getElementById("form-login-input-user")
+            preventDefault: function() {},
+            currentTarget : document.getElementById("form-login-input-user")
         };
 
         form.onChange(fakeEvent);
 
         // during onChange I decide to change input value to be correct, and I resend event
         jest.advanceTimersByTime(5);
-        document.getElementById("form-login-input-user").setAttribute('value', 'aze');
+        document.getElementById("form-login-input-user").setAttribute("value", "aze");
         form.onChange(fakeEvent);
 
         // first callback cancelled
@@ -116,7 +116,7 @@ describe("form", function(){
     <input class="form__btn form__btn--large form__btn--primary" id="form-login-submit" name="form-login-submit" type="submit" value="Log in">
 </form>`;
 
-        const form = new window.Form(document.getElementById('form-login'));
+        const form = new window.Form(document.getElementById("form-login"));
         form.canFinallySubmit = function() {
             expect(this.hasError).toBe(true);
             expect(document.body.innerHTML).toBe(`
@@ -140,12 +140,12 @@ describe("form", function(){
         };
 
         let fakeEvent = {
-            "preventDefault": function() {},
-            "currentTarget": [
+            preventDefault: function() {},
+            currentTarget : [
                 document.getElementById("form-login-input-user"),
                 document.getElementById("form-login-input-pass"),
-                document.getElementById("form-login-checkbox-remember"),
-            ],
+                document.getElementById("form-login-checkbox-remember")
+            ]
         };
 
         form.onSubmit(fakeEvent);
@@ -170,7 +170,7 @@ describe("form", function(){
     <input class="form__btn form__btn--large form__btn--primary" id="form-login-submit" name="form-login-submit" type="submit" value="Log in">
 </form>`;
 
-        const form = new window.Form(document.getElementById('form-login'));
+        const form = new window.Form(document.getElementById("form-login"));
         form.canFinallySubmit = function() {
             expect(this.hasError).toBe(false);
             expect(document.body.innerHTML).toBe(`
@@ -194,19 +194,19 @@ describe("form", function(){
         };
 
         let fakeEvent = {
-            "preventDefault": function() {},
-            "currentTarget": [
+            preventDefault: function() {},
+            currentTarget : [
                 document.getElementById("form-login-input-user"),
                 document.getElementById("form-login-input-pass"),
-                document.getElementById("form-login-checkbox-remember"),
-            ],
+                document.getElementById("form-login-checkbox-remember")
+            ]
         };
 
         form.onSubmit(fakeEvent);
     });
 
     it("should not submit twice", function(done) {
-        const form = new window.Form(document.getElementById('form-login'));
+        const form = new window.Form(document.getElementById("form-login"));
         form.canFinallySubmit = function() {
             done();
         };
@@ -214,12 +214,12 @@ describe("form", function(){
         let err;
 
         let fakeEvent = {
-            "preventDefault": function() {},
-            "currentTarget": [
+            preventDefault: function() {},
+            currentTarget : [
                 document.getElementById("form-login-input-user"),
                 document.getElementById("form-login-input-pass"),
-                document.getElementById("form-login-checkbox-remember"),
-            ],
+                document.getElementById("form-login-checkbox-remember")
+            ]
         };
 
         err = form.onSubmit(fakeEvent);
@@ -238,7 +238,7 @@ describe("form", function(){
     </div>
 </form>`;
 
-        const form = new window.Form(document.getElementById('form-login'));
+        const form = new window.Form(document.getElementById("form-login"));
         form.canFinallySubmit = function() {
             expect(this.hasError).toBe(true);
             expect(document.body.innerHTML).toBe(`
@@ -252,10 +252,10 @@ describe("form", function(){
         };
 
         let fakeEvent = {
-            "preventDefault": function() {},
-            "currentTarget": [
-                document.getElementById("form-login-input-user"),
-            ],
+            preventDefault: function() {},
+            currentTarget : [
+                document.getElementById("form-login-input-user")
+            ]
         };
 
         form.onSubmit(fakeEvent);
@@ -270,7 +270,7 @@ describe("form", function(){
     </div>
 </form>`;
 
-        const form = new window.Form(document.getElementById('form-login'));
+        const form = new window.Form(document.getElementById("form-login"));
         form.canFinallySubmit = function() {
             expect(this.hasError).toBe(true);
             expect(document.body.innerHTML).toBe(`
@@ -284,10 +284,10 @@ describe("form", function(){
         };
 
         let fakeEvent = {
-            "preventDefault": function() {},
-            "currentTarget": [
-                document.getElementById("form-login-input-user"),
-            ],
+            preventDefault: function() {},
+            currentTarget : [
+                document.getElementById("form-login-input-user")
+            ]
         };
 
         form.onSubmit(fakeEvent);
@@ -302,7 +302,7 @@ describe("form", function(){
     </div>
 </form>`;
 
-        const form = new window.Form(document.getElementById('form-login'));
+        const form = new window.Form(document.getElementById("form-login"));
         form.canFinallySubmit = function() {
             expect(this.hasError).toBe(true);
             expect(document.body.innerHTML).toBe(`
@@ -316,10 +316,10 @@ describe("form", function(){
         };
 
         let fakeEvent = {
-            "preventDefault": function() {},
-            "currentTarget": [
-                document.getElementById("form-login-input-user"),
-            ],
+            preventDefault: function() {},
+            currentTarget : [
+                document.getElementById("form-login-input-user")
+            ]
         };
 
         form.onSubmit(fakeEvent);
@@ -344,16 +344,16 @@ describe("form", function(){
     <input class="form__btn form__btn--large form__btn--primary" id="form-login-submit" name="form-login-submit" type="submit" value="Log in">
 </form>`;
 
-        const form = new window.Form(document.getElementById('form-login'));
+        const form = new window.Form(document.getElementById("form-login"));
 
         let fakeEvent = {
-            "preventDefault": function() {},
-            "currentTarget": document.getElementById("form-login-input-user")
+            preventDefault: function() {},
+            currentTarget : document.getElementById("form-login-input-user")
         };
 
         form.onChange(fakeEvent);
 
-        setTimeout(function(){
+        setTimeout(function() {
             expect(document.body.innerHTML).toBe(`
 <form action="#popin-login" id="form-login" method="post">
     <div class="form__element">
@@ -388,18 +388,18 @@ describe("form", function(){
     <input class="form__btn form__btn--large form__btn--primary" id="form-login-submit" name="form-login-submit" type="submit" value="Log in">
 </form>`;
 
-        const form = new window.Form(document.getElementById('form-login'));
+        const form = new window.Form(document.getElementById("form-login"));
 
         let fakeEvent = {
-            "preventDefault": function() {},
-            "currentTarget": document.getElementById("form-login-input-user")
+            preventDefault: function() {},
+            currentTarget : document.getElementById("form-login-input-user")
         };
 
         form.onChange(fakeEvent);
 
         // during onChange I decide to change input value to be correct, and I resend event
         jest.advanceTimersByTime(5);
-        document.getElementById("form-login-input-user").setAttribute('value', 'aze');
+        document.getElementById("form-login-input-user").setAttribute("value", "aze");
 
         // submit form
         form.canFinallySubmit = function() {
@@ -417,17 +417,17 @@ describe("form", function(){
         };
 
         fakeEvent = {
-            "preventDefault": function() {},
-            "currentTarget": [
-                document.getElementById("form-login-input-user"),
-            ],
+            preventDefault: function() {},
+            currentTarget : [
+                document.getElementById("form-login-input-user")
+            ]
         };
         form.onSubmit(fakeEvent);
 
         // new onChange is cancelled because form is in submit process
         fakeEvent = {
-            "preventDefault": function() {},
-            "currentTarget": document.getElementById("form-login-input-user")
+            preventDefault: function() {},
+            currentTarget : document.getElementById("form-login-input-user")
         };
         form.onChange(fakeEvent);
 
@@ -457,18 +457,22 @@ describe("form", function(){
 </form>`;
 
         let callbacksLeft = 2;
-        function callbackCalled(){
+        function callbackCalled() {
             callbacksLeft--;
             if (callbacksLeft === 0) {
                 done();
             }
         }
 
-        const form = new window.Form(document.getElementById('form-login'));
+        const form = new window.Form(document.getElementById("form-login"));
 
         var f = document.getElementById("form-login");
-        f.submit = function() {callbackCalled();};
-        form.setForm = function(form) { this.form = form; };
+        f.submit = function() {
+            callbackCalled();
+        };
+        form.setForm = function(form) {
+            this.form = form;
+        };
         form.setForm(f);
 
         var ret = form.callConfirmCallback();
@@ -488,19 +492,21 @@ describe("form", function(){
 </form>`;
 
         let callbacksLeft = 2;
-        function callbackCalled(){
+        function callbackCalled() {
             callbacksLeft--;
             if (callbacksLeft === 0) {
                 done();
             }
         }
 
-        const form = new window.Form(document.getElementById('form-login'));
+        const form = new window.Form(document.getElementById("form-login"));
 
         var f = document.getElementById("form-login");
-        form.setForm = function(form) { this.form = form; };
+        form.setForm = function(form) {
+            this.form = form;
+        };
         form.setForm(f);
-        form.isSubmit  = function() {
+        form.isSubmit = function() {
             return this.canSubmit;
         };
 
@@ -528,10 +534,12 @@ describe("form", function(){
     <input class="form__btn form__btn--large form__btn--primary" id="form-login-submit" name="form-login-submit" type="submit" value="Log in">
 </form>`;
 
-        const form = new window.Form(document.getElementById('form-login'));
+        const form = new window.Form(document.getElementById("form-login"));
 
         var f = document.getElementById("form-login");
-        form.setForm = function(form) { this.form = form; };
+        form.setForm = function(form) {
+            this.form = form;
+        };
         form.setForm(f);
 
         var ret = form.callConfirmCallback();
@@ -550,10 +558,12 @@ describe("form", function(){
     <input class="form__btn form__btn--large form__btn--primary" id="form-login-submit" name="form-login-submit" type="submit" value="Log in">
 </form>`;
 
-        const form = new window.Form(document.getElementById('form-login'));
+        const form = new window.Form(document.getElementById("form-login"));
 
         var f = document.getElementById("form-login");
-        form.setForm = function(form) { this.form = form; };
+        form.setForm = function(form) {
+            this.form = form;
+        };
         form.setForm(f);
 
         var ret = form.callConfirmCallback();
@@ -572,10 +582,12 @@ describe("form", function(){
     <input class="form__btn form__btn--large form__btn--primary" id="form-login-submit" name="form-login-submit" type="submit" value="Log in">
 </form>`;
 
-        const form = new window.Form(document.getElementById('form-login'));
+        const form = new window.Form(document.getElementById("form-login"));
 
         var f = document.getElementById("form-login");
-        form.setForm = function(form) { this.form = form; };
+        form.setForm = function(form) {
+            this.form = form;
+        };
         form.setForm(f);
 
         var ret = form.showConfirm();
@@ -594,10 +606,12 @@ describe("form", function(){
     <input class="form__btn form__btn--large form__btn--primary" id="form-login-submit" name="form-login-submit" type="submit" value="Log in">
 </form>`;
 
-        const form = new window.Form(document.getElementById('form-login'));
+        const form = new window.Form(document.getElementById("form-login"));
 
         var f = document.getElementById("form-login");
-        form.setForm = function(form) { this.form = form; };
+        form.setForm = function(form) {
+            this.form = form;
+        };
         form.setForm(f);
 
         var ret = form.showConfirm();
@@ -618,24 +632,28 @@ describe("form", function(){
 <div id="popin-confirm"><div id="popin-confirm-h2"></div><div id="popin-confirm-div-content"></div></div>`;
 
         let callbacksLeft = 2;
-        function callbackCalled(){
+        function callbackCalled() {
             callbacksLeft--;
             if (callbacksLeft === 0) {
                 done();
             }
         }
 
-        const form = new window.Form(document.getElementById('form-login'));
+        const form = new window.Form(document.getElementById("form-login"));
 
         var f = document.getElementById("form-login");
-        f.submit = function() { callbackCalled(); };
-        form.setForm = function(form) { this.form = form; };
+        f.submit = function() {
+            callbackCalled();
+        };
+        form.setForm = function(form) {
+            this.form = form;
+        };
         form.setForm(f);
 
         var ret = form.showConfirm();
         expect(ret).toBe(true);
 
-        expect(window.location.hash).toBe('#popin-confirm');
+        expect(window.location.hash).toBe("#popin-confirm");
 
         expect(document.body.innerHTML).toBe(`
 <form action="#popin-login" data-form-confirm="" id="form-login" method="post">
@@ -647,7 +665,7 @@ describe("form", function(){
 </form>
 <div id="popin-confirm"><div id="popin-confirm-h2">Do you confirm?</div><div id="popin-confirm-div-content"><button class="form__button form__button--small" id="popin-confirm-button-yes">Yes</button><button class="form__button form__button--secondary form__button--small" id="popin-confirm-button-no">No</button></div></div>`);
 
-        document.getElementById('popin-confirm-button-yes').click();
+        document.getElementById("popin-confirm-button-yes").click();
 
         callbackCalled();
     });
@@ -664,26 +682,28 @@ describe("form", function(){
 <div id="popin-confirm"><div id="popin-confirm-h2"></div><div id="popin-confirm-div-content"></div></div>`;
 
         let callbacksLeft = 2;
-        function callbackCalled(){
+        function callbackCalled() {
             callbacksLeft--;
             if (callbacksLeft === 0) {
                 done();
             }
         }
 
-        const form = new window.Form(document.getElementById('form-login'));
+        const form = new window.Form(document.getElementById("form-login"));
 
         var f = document.getElementById("form-login");
-        form.setForm = function(form) { this.form = form; };
+        form.setForm = function(form) {
+            this.form = form;
+        };
         form.setForm(f);
-        form.isSubmit  = function() {
+        form.isSubmit = function() {
             return this.canSubmit;
         };
 
         var ret = form.showConfirm();
         expect(ret).toBe(true);
 
-        expect(window.location.hash).toBe('#popin-confirm');
+        expect(window.location.hash).toBe("#popin-confirm");
 
         expect(document.body.innerHTML).toBe(`
 <form action="#popin-login" data-form-confirm="" id="form-login" method="post">
@@ -695,7 +715,7 @@ describe("form", function(){
 </form>
 <div id="popin-confirm"><div id="popin-confirm-h2">Do you confirm?</div><div id="popin-confirm-div-content"><button class="form__button form__button--small" id="popin-confirm-button-yes">Yes</button><button class="form__button form__button--secondary form__button--small" id="popin-confirm-button-no">No</button></div></div>`);
 
-        document.getElementById('popin-confirm-button-no').click();
+        document.getElementById("popin-confirm-button-no").click();
 
         setTimeout(function() {
             expect(form.isSubmit()).toBe(true);
@@ -719,16 +739,18 @@ describe("form", function(){
 </form>
 <div id="popin-confirm"><div id="popin-confirm-h2"></div><div id="popin-confirm-div-content"></div></div>`;
 
-        const form = new window.Form(document.getElementById('form-login'));
+        const form = new window.Form(document.getElementById("form-login"));
 
         var f = document.getElementById("form-login");
-        form.setForm = function(form) { this.form = form; };
+        form.setForm = function(form) {
+            this.form = form;
+        };
         form.setForm(f);
 
         var ret = form.showConfirm();
         expect(ret).toBe(true);
 
-        expect(window.location.hash).toBe('#popin-confirm');
+        expect(window.location.hash).toBe("#popin-confirm");
 
         expect(document.body.innerHTML).toBe(`
 <form action="#popin-login" data-form-confirm="" data-form-confirm-question="Are your sure?" data-form-confirm-yes="of course" data-form-confirm-no="no thanks" id="form-login" method="post">
@@ -754,16 +776,18 @@ describe("form", function(){
 </form>
 <div id="popin-confirm"><div id="popin-confirm-h2">Are your sure?</div><div id="popin-confirm-div-content"><button class="form__button form__button--small" id="popin-confirm-button-yes">of course</button><button class="form__button form__button--secondary form__button--small" id="popin-confirm-button-no">no thanks</button></div></div>`;
 
-        const form = new window.Form(document.getElementById('form-login'));
+        const form = new window.Form(document.getElementById("form-login"));
 
         var f = document.getElementById("form-login");
-        form.setForm = function(form) { this.form = form; };
+        form.setForm = function(form) {
+            this.form = form;
+        };
         form.setForm(f);
 
         var ret = form.showConfirm();
         expect(ret).toBe(true);
 
-        expect(window.location.hash).toBe('#popin-confirm');
+        expect(window.location.hash).toBe("#popin-confirm");
 
         expect(document.body.innerHTML).toBe(`
 <form action="#popin-login" data-form-confirm="" id="form-login" method="post">
@@ -792,11 +816,11 @@ describe("form", function(){
     <input class="form__btn form__btn--large form__btn--primary" id="form-ui-submit" name="form-ui-submit" type="submit" value="Log in">
 </form>`;
 
-        const form = new window.Form(document.getElementById('form-ui'));
+        const form = new window.Form(document.getElementById("form-ui"));
 
         let fakeEvent = {
-            "preventDefault": function() {},
-            "currentTarget": document.getElementById("form-ui-input-file"),
+            preventDefault: function() {},
+            currentTarget : document.getElementById("form-ui-input-file")
         };
 
         form.onChange(fakeEvent);
@@ -835,21 +859,21 @@ describe("form", function(){
     <input class="form__btn form__btn--large form__btn--primary" id="form-ui-submit" name="form-ui-submit" type="submit" value="Log in">
 </form>`;
 
-        const form = new window.Form(document.getElementById('form-ui'));
+        const form = new window.Form(document.getElementById("form-ui"));
 
         var inputFile = document.getElementById("form-ui-input-file");
-        var file = new File(['(⌐□_□)'], 'chucknorris.png', {
-            type: 'image/png',
+        var file = new File(["(⌐□_□)"], "chucknorris.png", {
+            type: "image/png"
         });
 
-        Object.defineProperty(inputFile, 'files', {
+        Object.defineProperty(inputFile, "files", {
             get: jest.fn().mockImplementation(() => { return [file]; }),
-            set: jest.fn().mockImplementation(() => {}),
+            set: jest.fn().mockImplementation(() => {})
         });
 
         let fakeEvent = {
-            "preventDefault": function() {},
-            "currentTarget": inputFile,
+            preventDefault: function() {},
+            currentTarget : inputFile
         };
 
         form.onChange(fakeEvent);
@@ -893,15 +917,15 @@ describe("form", function(){
     <input class="form__btn form__btn--large form__btn--primary" id="form-login-submit" name="form-login-submit" type="submit" value="Log in">
 </form>`;
 
-        const form = new window.Form(document.getElementById('form-login'));
+        const form = new window.Form(document.getElementById("form-login"));
 
         let fakeEvent = {
-            "preventDefault": function() {},
-            "currentTarget": [
+            preventDefault: function() {},
+            currentTarget : [
                 document.getElementById("form-login-input-user"),
                 document.getElementById("form-login-input-pass"),
-                document.getElementById("form-login-checkbox-remember"),
-            ],
+                document.getElementById("form-login-checkbox-remember")
+            ]
         };
 
         form.canFinallySubmit = function() {
@@ -910,20 +934,20 @@ describe("form", function(){
                 // eslint-disable-next-line jest/no-conditional-expect
                 expect(false).toBe(true);
             } else {
-                var generalErrorTitle = this.form.getAttribute('data-form-general-error');
+                var generalErrorTitle = this.form.getAttribute("data-form-general-error");
                 if (generalErrorTitle) {
                     // eslint-disable-next-line jest/no-conditional-expect
                     expect(false).toBe(true);
-                    this.formHelper.setGeneralError(this.form.getAttribute('id'), generalErrorTitle, this.listErrors);
+                    this.formHelper.setGeneralError(this.form.getAttribute("id"), generalErrorTitle, this.listErrors);
                 } else {
                     var speak = [];
                     for (var i = 0; i < this.listErrors.length; i++) {
                         speak.push(this.listErrors[i].message);
                     }
-                    var speakIntro = this.form.getAttribute('data-form-speak-error') || 'Form is invalid:';
-                    var res = speakIntro + ' ' + speak.join(', ');
+                    var speakIntro = this.form.getAttribute("data-form-speak-error") || "Form is invalid:";
+                    var res = speakIntro + " " + speak.join(", ");
                     // eslint-disable-next-line jest/no-conditional-expect
-                    expect(res).toBe(`Form is invalid: Username is required, Password is required`);
+                    expect(res).toBe("Form is invalid: Username is required, Password is required");
                 }
                 this.canSubmit = true;
             }
@@ -953,15 +977,15 @@ describe("form", function(){
     <input class="form__btn form__btn--large form__btn--primary" id="form-login-submit" name="form-login-submit" type="submit" value="Log in">
 </form>`;
 
-        const form = new window.Form(document.getElementById('form-login'));
+        const form = new window.Form(document.getElementById("form-login"));
 
         let fakeEvent = {
-            "preventDefault": function() {},
-            "currentTarget": [
+            preventDefault: function() {},
+            currentTarget : [
                 document.getElementById("form-login-input-user"),
                 document.getElementById("form-login-input-pass"),
-                document.getElementById("form-login-checkbox-remember"),
-            ],
+                document.getElementById("form-login-checkbox-remember")
+            ]
         };
 
         form.canFinallySubmit = function() {
@@ -970,9 +994,9 @@ describe("form", function(){
                 // eslint-disable-next-line jest/no-conditional-expect
                 expect(false).toBe(true);
             } else {
-                var generalErrorTitle = this.form.getAttribute('data-form-general-error');
+                var generalErrorTitle = this.form.getAttribute("data-form-general-error");
                 if (generalErrorTitle) {
-                    this.formHelper.setGeneralError(this.form.getAttribute('id'), generalErrorTitle, this.listErrors);
+                    this.formHelper.setGeneralError(this.form.getAttribute("id"), generalErrorTitle, this.listErrors);
                     // eslint-disable-next-line jest/no-conditional-expect
                     expect(document.body.innerHTML).toBe(`
 <div role="alert" class="block__info block__info--error" id="form-login-error"><h4 class="block__title block__title--small">There is errors in form login</h4><ul class="block__list"><li class="block__list-item"><a class="block__list-link" href="#form-login-input-user">Username is required</a></li><li class="block__list-item"><a class="block__list-link" href="#form-login-input-pass">Password is required</a></li></ul></div><form action="#popin-login" id="form-login" method="post" data-form-general-error="There is errors in form login">
@@ -998,10 +1022,10 @@ describe("form", function(){
                     for (var i = 0; i < this.listErrors.length; i++) {
                         speak.push(this.listErrors[i].message);
                     }
-                    var speakIntro = this.form.getAttribute('data-form-speak-error') || 'Form is invalid:';
-                    var res = speakIntro + ' ' + speak.join(', ');
+                    var speakIntro = this.form.getAttribute("data-form-speak-error") || "Form is invalid:";
+                    var res = speakIntro + " " + speak.join(", ");
                     // eslint-disable-next-line jest/no-conditional-expect
-                    expect(res).toBe(`Form is invalid: Username is required, Password is required`);
+                    expect(res).toBe("Form is invalid: Username is required, Password is required");
                 }
                 this.canSubmit = true;
             }

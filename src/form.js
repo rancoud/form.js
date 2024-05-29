@@ -192,7 +192,7 @@ Form.prototype.checkFieldState = function checkFieldState(elemObj, isSubmitEvent
         if (isSubmitEvent && error !== null) {
             this.hasError = true;
             this.listErrors.push({
-                id: currentID,
+                id     : currentID,
                 message: errorMessage
             });
         }
@@ -333,7 +333,7 @@ Form.prototype.showConfirm = function showConfirm() {
     /** @type {(HTMLElement|null)} */
     var oldBtnNo;
     /** @type {(HTMLElement|null)} */
-    var btnYes
+    var btnYes;
     /** @type {(HTMLElement|null)} */
     var btnNo;
 

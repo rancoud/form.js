@@ -370,7 +370,7 @@ FormHelper.prototype.setFieldLoading = function setFieldLoading(elemID) {
 
 // region Remove General Error
 // eslint-disable-next-line func-names
-FormHelper.prototype.removeGeneralError = function (elemID) {
+FormHelper.prototype.removeGeneralError = function(elemID) {
     /** @type {(TypeError|Error|HTMLElement)} */
     var elemObj = getHTMLElement(elemID);
     if (!(elemObj instanceof HTMLElement)) {
@@ -600,11 +600,11 @@ FormHelper.prototype.tryFieldIsInvalid = function tryFieldIsInvalid(elemID, rule
     val = elemObj.value.trim();
     rulesTextParts = rulesText.split("|");
     fieldInspection = {
-        elemObj: elemObj,
-        val: val,
-        len: val.length,
+        elemObj            : elemObj,
+        val                : val,
+        len                : val.length,
         idxOptionsTextParts: 0,
-        rulesTextParts: rulesTextParts,
+        rulesTextParts     : rulesTextParts,
         maxOptionsTextParts: rulesTextParts.length
     };
 
