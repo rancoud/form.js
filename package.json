@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/rancoud/form.js",
   "devDependencies": {
-    "@babel/core": "^7.28.4",
+    "@babel/core": "^7.28.5",
     "@stylistic/eslint-plugin": "^5.5.0",
     "@types/jest": "^30.0.0",
     "eslint": "^9.37.0",
@@ -34,8 +34,8 @@
   },
   "type": "module",
   "engines": {
-    "npm": ">=10.7.0",
-    "node": ">=22.1.0"
+    "npm": ">=11.0.0",
+    "node": ">=25.0.0"
   },
   "jest": {
     "testEnvironment": "jsdom"
